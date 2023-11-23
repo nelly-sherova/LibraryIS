@@ -11,20 +11,22 @@
 
     <table>
         <tr>
-            <th></th>
-            <th>Author</th>
-            <th>Genre</th>
-            <th>Published Date</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Публикация</th>
+            <th>Город публикации</th>
+            <th>Язык</th>
         </tr>
 
         @foreach (var book in Model)
         {
             <tr>
-                <td>@book.</td>
-                <td>@book.</td>
-                <td>@book.</td>
-                <td>@book.</td>
-                <td><a href="/Details?id=@book.Id">Details</a></td>
+                <td>@book.Name</td>
+                <td>@book.Description</td>
+                <td>@book.Publication</td>
+                <td>@book.PublicationCity</td>
+                <td>@book.Language</td>
+                <td><a href="Book/Details?id=@book.Id">Details</a></td>
             </tr>
         }
     </table>

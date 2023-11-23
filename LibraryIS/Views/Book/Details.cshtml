@@ -1,0 +1,35 @@
+﻿@model Book
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Details</title>
+</head>
+<body>
+    <h1>Details</h1>
+
+    <table>
+        <tr>
+            <th>Название</th>
+            <td>@Model.Name</td>
+        </tr>
+        <tr>
+            <th>Описание</th>
+            <td>@Model.Description</td>
+        </tr>
+        <tr>
+            <th>Публикация</th>
+            <td>@Model.Publication</td>
+        </tr>
+        <tr>
+            <th>Город публикации</th>
+            <td>@Model.Publication</td>
+        </tr>
+        <tr>
+            <th>Язык</th>
+            <td>@Model.Language</td>
+        </tr>
+        
+    </table>
+</body>

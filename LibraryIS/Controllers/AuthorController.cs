@@ -1,0 +1,103 @@
+﻿using LibraryIS.Data;
+using LibraryIS.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace LibraryIS.Controllers
+{
+    public class AuthorController : Controller
+    {
+        private readonly DataContext context; 
+        public AuthorController(DataContext context) 
+        {
+            this.context = context;
+        }
+
+        // GET: AuthorController
+        public ActionResult Index()
+        {
+            var authors = context.Authors.ToList();
+            if(!authors.Any())
+                return NotFound();  
+            return View(authors);
+        }
+
+        // GET: AuthorController/Details/5
+        public ActionResult Details(int id)
+        {
+            var author = context.Authors.Where(a => a.Id == id).FirstOrDefault();
+            if(author == null) return NotFound();
+            return View(author);
+        }
+
+        // GET: AuthorController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: AuthorController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Author author)
+        {
+            try
+            {
+                context.Authors.Add(author);
+                context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+
+        }
+
+        // GET: AuthorController/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        // POST: AuthorController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: AuthorController/Delete/5
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        // POST: AuthorController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                var data = context.Books.Where(b => b.Id == id).FirstOrDefault();   
+                if(data == null) return NotFound();
+                context.Books.Remove(data);
+                context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+    }
+}
