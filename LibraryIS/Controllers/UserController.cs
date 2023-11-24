@@ -16,7 +16,11 @@ namespace LibraryIS.Controllers
         // GET: UserController
         public ActionResult Index()
         {
-            var users = context.Users.ToList(); 
+            var users = context.Users.ToList();
+            foreach (var user in users)
+            {
+                user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
+            }
             if (!users.Any())
                 return BadRequest();
             return View(users);
@@ -25,9 +29,11 @@ namespace LibraryIS.Controllers
         // GET: UserController/Details/5
         public ActionResult Details(int id)
         {
-            var user = context.Users.Where(u => u.Id == id); 
-            if (!user.Any())   
+            var user = context.Users.Where(u => u.Id == id).FirstOrDefault(); 
+            
+            if (user == null)   
                 return BadRequest();    
+            user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId); 
             return View(user);
         }
 

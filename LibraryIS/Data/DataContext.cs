@@ -1,9 +1,10 @@
-﻿using LibraryIS.Models;
+﻿using LibraryIS.Migrations;
+using LibraryIS.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryIS.Data
 {
-	public class DataContext : DbContext
+    public class DataContext : DbContext
 	{
 		public DataContext(DbContextOptions<DataContext> options) : base(options)
 		{

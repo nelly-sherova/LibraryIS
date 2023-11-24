@@ -20,8 +20,8 @@
                 <th>Дата рождения</th>
                 <th>Электронный адрес</th>
                 <th>Номер телефона</th>
+                <th>Роль</th>
                 
-                <th></th>
 
             </tr>
         </thead>
@@ -36,8 +36,8 @@
                     <td>@user.DateOfBirth</td>
                     <td>@user.Email</td>
                     <td>@user.PhoneNumber</td>
-                   
-                    <td><a href="Book/Details?id=@user.Id">Details</a></td>
+                    <td>@user.Role.Name</td>
+                    <td><a href="User/Details?id=@user.Id">Details</a></td>
                 </tr>
             }
 

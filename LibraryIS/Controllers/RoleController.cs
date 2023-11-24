@@ -19,7 +19,7 @@ namespace LibraryIS.Controllers
         // GET: RoleController
         public ActionResult Index()
         {
-            var roles = context.Users.ToList();
+            var roles = context.Roles.ToList();
             if (!roles.Any())
                 return BadRequest();
             return View(roles);
