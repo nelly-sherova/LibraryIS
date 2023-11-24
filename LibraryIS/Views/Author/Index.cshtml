@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Author>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authors</title>
+</head>
+<body>
+    <h1>Authors</h1>
+
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Идентификатор</th>
+                <th>ФИО</th>
+                <th>Об авторе</th>
+                <th>Подробно</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var author in Model)
+            {
+                <tr>
+                    <td>@author.Id</td>
+                    <td>@author.FullName</td>
+                    <td>@author.Description</td>
+                   
+                    <td><a href="Book/Details?id=@author.Id">Details</a></td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</body>
+</html>

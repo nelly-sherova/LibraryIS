@@ -16,7 +16,7 @@ namespace LibraryIS.Controllers
         // GET: UserController
         public ActionResult Index()
         {
-            var users = context.Users.ToList();
+            var users = context.Users.ToList(); 
             if (!users.Any())
                 return BadRequest();
             return View(users);
@@ -101,10 +101,13 @@ namespace LibraryIS.Controllers
         // POST: UserController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, User user)
         {
             try
             {
+                var data = context.Users.Where(u => u.Id == id);
+                context.Remove(data);
+                context.SaveChanges(); 
                 return RedirectToAction(nameof(Index));
             }
             catch

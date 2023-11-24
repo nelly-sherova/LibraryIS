@@ -9,26 +9,32 @@
 <body>
     <h1>Books</h1>
 
-    <table>
-        <tr>
-            <th>Название</th>
-            <th>Описание</th>
-            <th>Публикация</th>
-            <th>Город публикации</th>
-            <th>Язык</th>
-        </tr>
 
-        @foreach (var book in Model)
-        {
+    <table class="table table-hover">
+        <thead>
             <tr>
-                <td>@book.Name</td>
-                <td>@book.Description</td>
-                <td>@book.Publication</td>
-                <td>@book.PublicationCity</td>
-                <td>@book.Language</td>
-                <td><a href="Book/Details?id=@book.Id">Details</a></td>
+                <th>Идентификатор</th>
+                <th>Название</th>
+                <th>Публикация</th>
+                <th>Город публикации</th>
+                <th>Язык</th>
+                <th>Подробно</th>
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Id</td>
+                    <td>@book.Name</td>
+                    <td>@book.Publication</td>
+                    <td>@book.PublicationCity</td>
+                    <td>@book.Language</td>
+                    <td><a href="Book/Details?id=@book.Id">Details</a></td>
+                </tr>
+            }
+           
+        </tbody>
     </table>
 </body>
 </html>

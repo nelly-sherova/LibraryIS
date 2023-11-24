@@ -21,10 +21,12 @@ namespace LibraryIS.Controllers
 				return BadRequest();
 			}
 			var books = context.Books.ToList();
-				
-			
-			
+
+			var bookAuthors = context.BookAuthor.ToList();
+			List<Author> authors = new List<Author>();
 			return View(books);
+
+
 		}
 
 		// GET: BookController/Details/5
