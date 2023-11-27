@@ -2,7 +2,7 @@
 <div class="container rounded bg-white mt-5 mb-5">
     <div class="row">
         <div class="col-md-3 border-right">
-            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span t-bold">@Model.FirstName</span><span class="text-black-50">@Model.LastName  @Model.MiddleName</span><span> </span></div>
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="@Model.PicUrl"><span t-bold">@Model.FirstName</span><span class="text-black-50">@Model.LastName  @Model.MiddleName</span><span> </span></div>
         </div>
         <div class="col-md-5 border-right">
             <div class="p-3 py-5">
@@ -18,12 +18,14 @@
                     <div class="col-md-12"><label class="labels">Дата рождения</label><input type="text" class="form-control" placeholder="@Model.DateOfBirth" readonly="True" value=""></div>
                     <div class="col-md-12"><label class="labels">Категория</label><input type="text" class="form-control" placeholder="@Model.Role.Name" readonly="True" value=""></div>
                     <div class="col-md-12"><label class="labels">Номер телефона</label><input type="text" class="form-control" placeholder="@Model.PhoneNumber" readonly="True" value=""></div>
-                    <div class="col-md-12"><label class="labels">Электронная почта:</label><input type="text" class="form-control" placeholder="@Model.Email" readonly="True" value=""></div>
+                    <div class="col-md-12"><label class="labels">Электронная почта</label><input type="text" class="form-control" placeholder="@Model.Email" readonly="True" value=""></div>
+                    <div class="col-md-12"><label class="labels">Пол</label><input type="text" class="form-control" placeholder="@Model.Sex" readonly="True" value=""></div>
                 </div>
-                @* <div class="row mt-3">
-                    <div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" value=""></div>
-                    <div class="col-md-6"><label class="labels">State/Region</label><input type="text" class="form-control" value="" placeholder="state"></div>
-                </div> *@
+                <div class="row mt-3">
+                    <div class="col-md-6"><label class="labels">Страна</label><input type="text" class="form-control" placeholder="@Model.Country" readonly="True" value=""></div>
+                    <div class="col-md-6"><label class="labels">Область</label><input type="text" class="form-control" readonly="True" value="" placeholder="@Model.Region"></div>
+                    <div class="col-md-6"><label class="labels">Город</label><input type="text" class="form-control" readonly="True" value="" placeholder="@Model.City"></div>
+                </div> 
                 <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Изменить профиль</button></div>
             </div>
         </div>
@@ -34,6 +36,48 @@
                 <div class="col-md-12"><label class="labels">Additional Details</label><input type="text" class="form-control" placeholder="additional details" value=""></div> *@
             </div>
         </div>
+
+
+        <h1>Список оформленных книг</h1>
+
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Идентификатор</th>
+                    <th>Название</th>
+                    <th>Публикация</th>
+                    <th>Город публикации</th>
+                    <th>Язык</th>
+                    <th>Подробно</th>
+                    <th>Дата оформления</th>
+                    <th>Дата возврата</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Model.BookUsers)
+                {
+                    <tr>
+                        <td>@book.Book.Id</td>
+                        <td>@book.Book.Name</td>
+                        <td>@book.Book.Publication</td>
+                        <td>@book.Book.PublicationCity</td>
+                        <td>@book.Book.Language</td>
+                        <td>@book.Book.IssueDate</td>
+                        <td>@book.Book.RetunDate</td>
+                        <td><a href="../Book/Details?id=@book.BookId">Details</a></td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+
+
+
+
     </div>
 </div>
 </div>

@@ -11,33 +11,104 @@ namespace LibraryIS.Controllers
 		private DataContext context; 
 		public BookController(DataContext context)
 		{
-			this.context = context;	
-		}
-		// GET: BookController
-		public ActionResult Index()
-		{
-			if(!context.Books.Any())
-			{
-				return BadRequest();
-			}
-			var books = context.Books.ToList();
+			this.context = context;
+        }
+        // GET: BookController
+        public ActionResult Index()
+        {
+            //if(!context.Books.Any())
+            //{
+            //	return BadRequest();
+            //}
+            //var books = context.Books.ToList();
 
-			var bookAuthors = context.BookAuthor.ToList();
-			List<Author> authors = new List<Author>();
-			return View(books);
+            //var bookAuthors = context.BookAuthor.ToList();
+            //List<Author> author
+            //s = new List<Author>();
+            //return View(books);
+            if (!context.Books.Any())
+            {
+                return BadRequest();
+            }
+            var books = context.Books
+                .Where(b => b.Visible == true)
+                .GroupBy(b => new { b.Collection, b.Name, b.Publication, b.Language })
+                .Select(group => new BookIndexViewModel
+                {
+                    Collection = group.Key.Collection,
+                    Name = group.Key.Name,
+                    BookCount = group.Count(),
+                    Publication = group.Key.Publication,
+                    Language = group.Key.Language
+                })
+            .ToList();
+            if (books == null)
+            {
+                return NotFound();
+            }
+          
+            return View(books);
+        }
+        public IActionResult Basket()
+        {
+            return View();
+        }
+        public IActionResult BookBasket()
+        {
 
+            var books = context.Books.Where(b=> b.Visible == false).ToList();
+            if(books == null)
+            {
+                return NotFound();
+            }
+            return View(books);
+        }
+        public IActionResult DetailsCollection(int Collection)
+        {
+            var books = context.Books.Where(b => b.Visible == true && b.Collection == Collection).ToList();
+            if(books == null)
+                return NotFound();
 
-		}
+            foreach (var item in books)
+            {
+                item.BookAuthor = context.BookAuthor.Where(bu => bu.BookId == item.Id).ToList();
+                foreach(var author in item.BookAuthor)
+                {
+                    author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                }
+            }
+            foreach(var item in books)
+            {
+                item.BookCategory = context.BookCategory.Where(bc=> bc.BookId == item.Id).ToList();
+                foreach(var category in item.BookCategory)
+                {
+                    category.Category = context.Categories.FirstOrDefault(c => c.Id == category.CategoryId);
+                }
+            }
+            return View(books);
+        }
+        // GET: BookController/Details/5
+        public ActionResult Details(int id)
+        {
+            var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
+            if(book == null) return NotFound();
+            book.BookAuthor = context.BookAuthor.Where(ba => ba.BookId == id).ToList();
+            foreach (var author in book.BookAuthor)
+            {
+                author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+            }
+            book.BookCategory = context.BookCategory.Where(ba => ba.BookId == id).ToList();
+            foreach (var category in book.BookCategory)
+            {
+                category.Category = context.Categories.FirstOrDefault(a => a.Id == category.CategoryId);
+            }
+            return View(book);
 
-		// GET: BookController/Details/5
-		public ActionResult Details(int id)
-		{
-			var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
-			return View(book);
-		}
+           
+        }
 
-		// GET: BookController/Create
-		public ActionResult Create()
+        // GET: BookController/Create
+        public ActionResult Create()
 		{
 
             // Получить доступных авторов и категории

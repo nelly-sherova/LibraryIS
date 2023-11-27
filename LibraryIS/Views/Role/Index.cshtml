@@ -16,7 +16,7 @@
                 <th>Идентификатор</th>
                 <th>Название</th>
                 <th>Описание</th>
-                <th></th>
+               
 
             </tr>
         </thead>
@@ -27,13 +27,14 @@
                     <td>@role.Id</td>
                     <td>@role.Name</td>
                     <td>@role.Description</td>
-
-                    <td><a href="Book/Details?id=@role.Id">Изменить</a></td>
                 </tr>
             }
 
+
+
         </tbody>
     </table>
+    <a href="Role/Create" class="btn btn-primary">Добавить</a>
 </body>
 </html>
 

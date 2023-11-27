@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Book>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+</head>
+<body>
+    <h1>Список</h1>
+
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td>Идентификатор</td>
+                <th>Название</th>
+                <th>Публикация</th>
+                <th>Состояние</th>
+                <th>Автор</th>
+                <th>Категория</th>
+                <th>Язык</th>
+                <th>Подробно</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Id</td>
+                    <td>@book.Name</td>
+                    <td>@book.Publication</td>
+                    <td>@book.State</td>
+                    <td>   
+                        @foreach(var authors in book.BookAuthor)
+                        {
+                             @String.Format("{0} ",authors.Author.FullName)
+                        }
+                    </td>
+                    <td>
+                        @foreach (var category in book.BookCategory)
+                        {
+                            @String.Format("{0} ", category.Category.Name)
+                                               
+                        }
+                    </td>
+                    <td>@book.Language</td>
+                    <td><a href="Details?id=@book.Id">Details</a></td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</body>
+</html>

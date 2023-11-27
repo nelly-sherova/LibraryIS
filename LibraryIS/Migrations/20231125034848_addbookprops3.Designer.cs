@@ -4,6 +4,7 @@ using LibraryIS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryIS.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231125034848_addbookprops3")]
+    partial class addbookprops3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,9 +65,6 @@ namespace LibraryIS.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("IssueDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Language")
                         .HasColumnType("nvarchar(max)");
 
@@ -82,9 +82,6 @@ namespace LibraryIS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PublicationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("RetunDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("State")
