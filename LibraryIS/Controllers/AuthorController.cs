@@ -16,7 +16,7 @@ namespace LibraryIS.Controllers
         // GET: AuthorController
         public ActionResult Index()
         {
-            var authors = context.Authors.ToList();
+            var authors = context.Authors.Where(a => a.Visible == true).ToList();
             if(!authors.Any())
                 return NotFound();  
             return View(authors);
@@ -99,6 +99,13 @@ namespace LibraryIS.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult AuthorBasket()
+        {
+            var authors = context.Authors.Where(a => a.Visible == false).ToList();
+            
+            return View(authors);
         }
     }
 }

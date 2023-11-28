@@ -191,6 +191,52 @@ namespace LibraryIS.Controllers
            
             return RedirectToAction(nameof(Index));
         }
+        public ActionResult AddUser(int bookid)
+        {
+            try
+            {
+                var book = context.Books.Where(b => b.Id == bookid).FirstOrDefault();
+                ViewBag.BookId = book.Id;
+                ViewBag.Book = book;
+                var users = context.Users.ToList();
+                ViewBag.Users = users; 
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddUser(BookUser bookUser)
+        {
+            try
+            {
+                bookUser.User = context.Users.Where(u => u.Id == bookUser.UserId).FirstOrDefault();
+                bookUser.Book = context.Books.Where(b => b.Id == bookUser.BookId).FirstOrDefault();
+                bookUser.Book.IssueDate = DateTime.Now;
+                bookUser.Book.RetunDate = bookUser.Book.IssueDate.AddDays(30);
+                context.BookUser.Add(bookUser);
+                context.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+
+            }
+           
+           // return RedirectToAction(nameof(UserController.Details), new RouteValueDictionary(bookUser.BookId));
+           
+
+            return RedirectToAction(nameof(UserController.Details), new RouteValueDictionary(new { id = bookUser.BookId }));// он возвращает book 
+
+
+
+        }
+
         // GET: BookController/Edit/5
         public ActionResult Edit(int id)
 		{

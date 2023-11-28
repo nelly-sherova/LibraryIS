@@ -1,0 +1,28 @@
+﻿@model BookUser
+
+<form method="post" asp-action="AddUser">
+    <
+    <div class="form-group">
+        <label asp-for="UserId">Для пользователя</label>
+        <select asp-for="UserId" class="form-control" style="margin-bottom: 1rem;">
+            <option value="">--Выберите--</option>
+            @foreach (var user in ViewBag.Users)
+            {
+                <option value="@user.Id">@user.FirstName @user.LastName  @user.MiddleName</option>
+            }
+        </select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
+
+
+        <div class="form-group">
+            <label asp-for="BookId">Книга</label>
+            <input asp-for="BookId" readonly class="form-control" value="@ViewBag.BookId" style="margin-bottom: 1rem;">
+            <span asp-validation-for="BookId" class="text-danger"></span>
+        </div>
+
+       
+
+
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить</button>
+</form>
