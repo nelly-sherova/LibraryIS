@@ -45,6 +45,7 @@ namespace LibraryIS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Category category)
         {
+           
             try
             {
                 context.Categories.Add(category);

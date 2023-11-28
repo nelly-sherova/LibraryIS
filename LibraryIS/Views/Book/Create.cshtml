@@ -1,46 +1,57 @@
-﻿<form>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="inputEmail4">Email</label>
-            <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-        </div>
-        <div class="form-group col-md-6">
-            <label for="inputPassword4">Password</label>
-            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
-        </div>
+﻿@model Book
+
+<form method="post" asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Name">Название</label>
+        <input asp-for="Name" class="form-control" placeholder="Название" style="margin-bottom: 1rem;">
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label for="inputAddress">Address</label>
-        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+        <label asp-for="Description">Описание</label>
+        <input asp-for="Description" class="form-control" placeholder="Описание" style="margin-bottom: 1rem;">
+        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label for="inputAddress2">Address 2</label>
-        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="inputCity">City</label>
-            <input type="text" class="form-control" id="inputCity">
-        </div>
-        <div class="form-group col-md-4">
-            <label for="inputState">State</label>
-            <select id="inputState" class="form-control">
-                <option selected>Choose...</option>
-                <option>...</option>
-            </select>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="inputZip">Zip</label>
-            <input type="text" class="form-control" id="inputZip">
-        </div>
+        <label asp-for="Publication">Публикация</label>
+        <input asp-for="Publication" class="form-control" placeholder="Публикация" style="margin-bottom: 1rem;">
+        <span asp-validation-for="Publication" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck">
-            <label class="form-check-label" for="gridCheck">
-                Check me out
-            </label>
-        </div>
+        <label asp-for="PublicationCity">Город публикации</label>
+        <input asp-for="Publication" class="form-control" placeholder="Город публикации" style="margin-bottom: 1rem;">
+        <span asp-validation-for="Publication" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Sign in</button>
+    <div class="form-group">
+        <label asp-for="PublicationDate"> Дата публикации<</label>
+        <input asp-for="PublicationDate" type="date" class="form-control" style="margin-bottom: 1rem;">
+        <span asp-validation-for="PublicationDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Language">Язык</label>
+        <input asp-for="Language" class="form-control" placeholder="Язык" style="margin-bottom: 1rem;">
+        <span asp-validation-for="Language" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CountOfPages">Количество страниц</label>
+        <input asp-for="CountOfPages" type="number" class="form-control" style="margin-bottom: 1rem;">
+        <span asp-validation-for="CountOfPages" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Binding">Переплет</label>
+        <input asp-for="Binding" class="form-control" placeholder="Переплет" style="margin-bottom: 1rem;">
+        <span asp-validation-for="Binding" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PicUrl">Картинка</label>
+        <input asp-for="PicUrl" class="form-control" placeholder="Картинка" style="margin-bottom: 1rem;">
+        <span asp-validation-for="PicUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="State">Состояние</label>
+        <input asp-for="State" class="form-control" placeholder="Состояние" style="margin-bottom: 1rem;">
+        <span asp-validation-for="State" class="text-danger"></span>
+    </div>
+   
+    
+    <button type="submit" class="btn btn-primary">Добавить</button>
 </form>

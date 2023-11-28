@@ -41,6 +41,7 @@ namespace LibraryIS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Author author)
         {
+           
             try
             {
                 context.Authors.Add(author);

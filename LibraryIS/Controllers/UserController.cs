@@ -62,12 +62,6 @@ namespace LibraryIS.Controllers
         public ActionResult Create()
         {
             var roles = context.Roles.ToList();
-            string[] strings = new string[roles.Count];
-            for(int i = 0; i < roles.Count; i++)
-            {
-                strings[i] = roles[i].Name; 
-            }
-            ViewBag.Names = strings;
             ViewBag.Roles = roles;  
             return View();
         }
@@ -77,6 +71,7 @@ namespace LibraryIS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(User user)
         {
+            
             try
             {
                 user.Role = context.Roles.Where(r => r.Id == user.RoleId).FirstOrDefault();

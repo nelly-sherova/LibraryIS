@@ -1,0 +1,27 @@
+﻿@model BookCategory
+
+<form method="post" asp-action="AddCategories"><
+<div class="form-group">
+    <label asp-for="CategoryId">Категория</label>
+    <select asp-for="CategoryId" class="form-control" style="margin-bottom: 1rem;">
+        <option value="">--Выберите--</option>
+        @foreach (var category in ViewBag.Categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </select>
+    <span asp-validation-for="CategoryId" class="text-danger"></span>
+
+
+    <div class="form-group">
+    <label asp-for="BookId">Книга</label>
+            <input asp-for="BookId" readonly class="form-control" value="@ViewBag.BookId" style="margin-bottom: 1rem;">
+            <span asp-validation-for="BookId" class="text-danger"></span>
+    </div>
+
+
+
+    
+</div>
+    <button type="submit" class="btn btn-primary">Добавить</button>
+</form>

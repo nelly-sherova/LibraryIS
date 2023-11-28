@@ -2,6 +2,7 @@
 using LibraryIS.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace LibraryIS.Controllers
 {
@@ -9,6 +10,7 @@ namespace LibraryIS.Controllers
 	{
 
 		private DataContext context; 
+      
 		public BookController(DataContext context)
 		{
 			this.context = context;
@@ -16,32 +18,24 @@ namespace LibraryIS.Controllers
         // GET: BookController
         public ActionResult Index()
         {
-            //if(!context.Books.Any())
-            //{
-            //	return BadRequest();
-            //}
-            //var books = context.Books.ToList();
-
-            //var bookAuthors = context.BookAuthor.ToList();
-            //List<Author> author
-            //s = new List<Author>();
-            //return View(books);
+            
             if (!context.Books.Any())
             {
                 return BadRequest();
             }
+ 
             var books = context.Books
                 .Where(b => b.Visible == true)
-                .GroupBy(b => new { b.Collection, b.Name, b.Publication, b.Language })
+                .GroupBy(b => new { b.Name})
                 .Select(group => new BookIndexViewModel
                 {
-                    Collection = group.Key.Collection,
+                   
                     Name = group.Key.Name,
                     BookCount = group.Count(),
-                    Publication = group.Key.Publication,
-                    Language = group.Key.Language
+                  
                 })
             .ToList();
+
             if (books == null)
             {
                 return NotFound();
@@ -63,9 +57,9 @@ namespace LibraryIS.Controllers
             }
             return View(books);
         }
-        public IActionResult DetailsCollection(int Collection)
+        public IActionResult DetailsCollection(string name)
         {
-            var books = context.Books.Where(b => b.Visible == true && b.Collection == Collection).ToList();
+            var books = context.Books.Where(b => b.Visible == true && b.Name == name).ToList();
             if(books == null)
                 return NotFound();
 
@@ -110,70 +104,93 @@ namespace LibraryIS.Controllers
         // GET: BookController/Create
         public ActionResult Create()
 		{
-
-            // Получить доступных авторов и категории
-			 var authors = context.Authors.ToList();
-            var categories = context.Categories.ToList();
-
-            // Создать новый экземпляр класса BookViewModel
-            var bookViewModel = new BookViewModel
-            {
-                Authors = authors,
-                Categories = categories
-            };
-
-            return View(bookViewModel);
+            
+            return View();
         }
 
 
 		// POST: BookController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(BookViewModel bookViewModel)
+        public ActionResult Create(Book book)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(bookViewModel);
+                context.Books.Add(book);
+                context.SaveChanges();
+                return RedirectToAction(nameof(AddCategories), new RouteValueDictionary(new { bookid = book.Id }));
             }
-
-            // Получить выбранные идентификаторы авторов
-            var selectedAuthorIds = bookViewModel.Authors.Select(author => author.Id).ToList();
-
-            // Получить выбранные идентификаторы категорий
-            var selectedCategoryIds = bookViewModel.Categories.Select(category => category.Id).ToList();
-
-            // Создать новый экземпляр книги
-            var book = new Book
+            catch (Exception ex)
             {
-                Name = bookViewModel.Book.Name,
-                Description = bookViewModel.Book.Description,
-                PublicationDate = bookViewModel.Book.PublicationDate,
-                Publication = bookViewModel.Book.Publication,
-                PublicationCity = bookViewModel.Book.PublicationCity,
-                Language = bookViewModel.Book.Language
-            };
 
-            // Добавить выбранных авторов в коллекцию BookAuthor книги
-            foreach (var authorId in selectedAuthorIds)
-            {
-                var author = context.Authors.Find(authorId);
-                book.BookAuthor.Add(new BookAuthor { Author = author, Book = book });
             }
-
-            // Добавить выбранные категории в коллекцию BookCategory книги
-            foreach (var categoryId in selectedCategoryIds)
-            {
-                var category = context.Categories.Find(categoryId);
-                book.BookCategory.Add(new BookCategory { Category = category, Book = book });
-            }
-
-            // Добавить новую книгу в базу данных
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            return RedirectToAction("Index");
+            return View();
+           
         }
 
+
+
+        public ActionResult AddCategories(int bookid)
+        {
+
+            var book = context.Books.Where(b => b.Id == bookid).FirstOrDefault();
+            
+            var categories = context.Categories.ToList();
+            ViewBag.BookId = bookid;
+            ViewBag.Book = book;
+            ViewBag.Categories = categories;    
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddCategories(BookCategory bookCategory)
+        {
+            try
+            {
+                bookCategory.Category = context.Categories.Where(Category => Category.Id == bookCategory.CategoryId).FirstOrDefault();
+                bookCategory.Book = context.Books.Where(book => book.Id == bookCategory.BookId).FirstOrDefault();
+
+
+                context.BookCategory.Add(bookCategory);
+                context.SaveChanges();
+
+                return RedirectToAction(nameof(AddAuthors), new RouteValueDictionary(new { bookid = bookCategory.BookId }));
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return View();
+        }
+        public ActionResult AddAuthors(int bookid)
+        {
+            var book = context.Books.Where(b=> b.Id == bookid).FirstOrDefault();
+            ViewBag.BookId = bookid;
+            ViewBag.Book = book;
+            var authors = context.Authors.ToList();
+            ViewBag.Authors = authors;
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddAuthors(BookAuthor bookAuthor)
+        {
+            try
+            {
+                bookAuthor.Author = context.Authors.Where(a => a.Id == bookAuthor.AuthorId).FirstOrDefault();
+                bookAuthor.Book = context.Books.Where(b => b.Id == bookAuthor.BookId).FirstOrDefault();
+                bookAuthor.Book.Visible = true;
+                context.BookAuthor.Add(bookAuthor);
+                context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+           
+            return RedirectToAction(nameof(Index));
+        }
         // GET: BookController/Edit/5
         public ActionResult Edit(int id)
 		{
@@ -231,5 +248,7 @@ namespace LibraryIS.Controllers
 				return View();
 			}
 		}
+
+        
 	}
 }
