@@ -1,5 +1,6 @@
 ﻿using LibraryIS.Data;
 using LibraryIS.Models;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,16 +62,34 @@ namespace LibraryIS.Controllers
         // GET: CategoryController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var category = context.Categories.Where(c => c.Id == id).FirstOrDefault();
+            if(category == null)
+            {
+                return BadRequest();
+            }
+            ViewBag.CategoryId = category.Id;
+            return View(category);
+           
+          
+           
         }
 
         // POST: CategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Category category)
         {
             try
             {
+                var data = context.Categories.FirstOrDefault(c => c.Id == category.Id);
+                if(data == null)
+                {
+                    return BadRequest();
+                }
+                data.Name = category.Name;
+                data.Description = category.Description;
+                context.Update(data);
+                context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch

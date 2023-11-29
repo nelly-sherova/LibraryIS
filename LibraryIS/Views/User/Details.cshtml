@@ -26,7 +26,9 @@
                     <div class="col-md-6"><label class="labels">Область</label><input type="text" class="form-control" readonly="True" value="" placeholder="@Model.Region"></div>
                     <div class="col-md-6"><label class="labels">Город</label><input type="text" class="form-control" readonly="True" value="" placeholder="@Model.City"></div>
                 </div> 
-                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Изменить профиль</button></div>
+              @*   <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Изменить профиль</button></div> *@
+                <div><a href="../User/Edit?id=@Model.Id" class="btn btn-primary">Изменить</a></div>
+             
             </div>
         </div>
         <div class="col-md-4">

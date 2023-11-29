@@ -1,0 +1,82 @@
+﻿@model User
+<form method="post" asp-action="Edit" enctype="multipart/form-data">
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="@Model.PicUrl"><span t-bold">@Model.FirstName</span><span class="text-black-50">@Model.LastName  @Model.MiddleName</span><span> </span></div>
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Редактировать профиль</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="labels">Фамилия</label>
+                        <input asp-for="FirstName" type="text" class="form-control" placeholder="@Model.FirstName" >
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="LastName" class="labels">Имя</label>
+                        <input asp-for="LastName" type="text" class="form-control" placeholder="@Model.LastName" >
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <label asp-for="MiddleName" class="labels">Отчество</label>
+                        <input asp-for="MiddleName" type="text" class="form-control" placeholder="@Model.MiddleName">
+                    </div>
+                    <div class="col-md-12">
+                        <label asp-for="DateOfBirth" class="labels">Дата рождения</label>
+                        <input asp-for="DateOfBirth" type="date" class="form-control" placeholder="@Model.DateOfBirth">
+                    </div>
+                    <div class="col-md-12">
+                        <label asp-for="PhoneNumber" class="labels">Номер телефона</label>
+                        <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="@Model.PhoneNumber">
+                    </div>
+                    <div class="col-md-12">
+                        <label asp-for="Email" class="labels">Электронная почта</label>
+                        <input asp-for="Email" type="text" class="form-control" placeholder="@Model.Email">
+                    </div>
+                    <div class="col-md-12">
+                        <label asp-for="Sex" class="labels">Пол</label>
+                        <input asp-for="Sex" type="text" class="form-control" placeholder="@Model.Sex" >
+                    </div>
+                        <div class="col-md-12">
+                            <label asp-for="Id" class="labels">UserId</label>
+                            <input asp-for="Id" type="text" readonly class="form-control" value="@ViewBag.UserId" style="margin-bottom: 1rem;">
+                        </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label asp-for="Country" class="labels">Страна</label>
+                        <input asp-for="Country" type="text" class="form-control" placeholder="@Model.Country" >
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Region" class="labels">Область</label>
+                        <input asp-for="Region" type="text" class="form-control" placeholder="@Model.Region">
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="City" class="labels">Город</label>
+                        <input asp-for="City" type="text" class="form-control" placeholder="@Model.City">
+                    </div>
+                </div>
+                @*   <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Изменить профиль</button></div> *@
+                
+
+            </div>
+        </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                @*<div class="d-flex justify-content-between align-items-center experience"><span>Edit Experience</span><span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Experience</span></div><br>
+                <div class="col-md-12"><label class="labels">Experience in Designing</label><input type="text" class="form-control" placeholder="experience" value=""></div> <br>
+                <div class="col-md-12"><label class="labels">Additional Details</label><input type="text" class="form-control" placeholder="additional details" value=""></div> *@
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+</div>
+</form>

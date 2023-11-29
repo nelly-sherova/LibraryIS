@@ -93,6 +93,7 @@ namespace LibraryIS.Controllers
             var user = context.Users.Where(u => u.Id == id).FirstOrDefault();   
             if (user == null)
                 return BadRequest();
+            ViewBag.UserId = user.Id;
 
             return View(user);
         }
@@ -100,11 +101,11 @@ namespace LibraryIS.Controllers
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, User user)
+        public ActionResult Edit(User user)
         {
             try
             {
-                var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
+                var data = context.Users.Where(u => u.Id == user.Id).FirstOrDefault();
                 if(data != null)
                 {
                     data.FirstName = user.FirstName;
@@ -113,6 +114,11 @@ namespace LibraryIS.Controllers
                     data.MiddleName = user.MiddleName;  
                     data.PhoneNumber = user.PhoneNumber;
                     data.DateOfBirth = user.DateOfBirth;
+                    data.City = user.City;  
+                    data.Country = user.Country;
+                    data.Region = user.Region;
+                    data.Sex = user.Sex;    
+                    context.Users.Update(data);
                     context.SaveChanges();
                    
 

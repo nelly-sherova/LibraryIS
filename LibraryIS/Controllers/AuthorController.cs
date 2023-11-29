@@ -44,7 +44,9 @@ namespace LibraryIS.Controllers
            
             try
             {
+                author.Visible = true;
                 context.Authors.Add(author);
+
                 context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -58,16 +60,28 @@ namespace LibraryIS.Controllers
         // GET: AuthorController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var author = context.Authors.Where(author => author.Id == id).FirstOrDefault();
+            if(author == null) return NotFound();
+            ViewBag.AuthorId = author.Id;
+            return View(author);
         }
 
         // POST: AuthorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit( Author author)
         {
+
             try
             {
+                var data = context.Authors.Where(a => a.Id == author.Id).FirstOrDefault();
+                if (data != null)
+                {
+                    data.FullName = author.FullName;
+                    data.Description = author.Description;
+                    context.Update(data);
+                    context.SaveChanges();
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -75,6 +89,7 @@ namespace LibraryIS.Controllers
                 return View();
             }
         }
+    
 
         // GET: AuthorController/Delete/5
         public ActionResult Delete(int id)

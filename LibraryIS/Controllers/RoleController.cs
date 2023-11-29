@@ -61,22 +61,24 @@ namespace LibraryIS.Controllers
         // GET: RoleController/Edit/5
         public ActionResult Edit(int id)
         {
-            var role = context.Roles.Where(r => r.Id != id).FirstOrDefault();   
+            var role = context.Roles.Where(r => r.Id == id).FirstOrDefault();   
             if (role == null)
                 return BadRequest();
-            return View();
+            ViewBag.RoleId = role.Id;
+            return View(role);
         }
 
         // POST: RoleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Role role)
+        public ActionResult Edit(Role role)
         {
             try
             {
-                var data = context.Roles.Where(r => r.Id == id).FirstOrDefault();
+                var data = context.Roles.Where(r => r.Id == role.Id).FirstOrDefault();
                 data.Name = role.Name;
                 data.Description = role.Description;
+                context.Roles.Update(data);
                 context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
