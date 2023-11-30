@@ -130,6 +130,31 @@ namespace LibraryIS.Controllers
                 return View();
             }
         }
+        public ActionResult EditRole(int userId)
+        {
+            var roles = context.Roles.ToList();
+            var user = context.Users.Where(u => u.Id == userId).FirstOrDefault();
+            ViewBag.Roles = roles;
+            ViewBag.Name = user.FirstName + " " + user.LastName + " " + user.MiddleName;
+            ViewBag.UserId = userId;
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditRole(User user)
+        {
+
+            var data = context.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+            var role = context.Roles.FirstOrDefault(role => role.Id == user.RoleId);
+            data.Role = role;
+            data.RoleId = user.RoleId;
+            context.Users.Update(data);
+            context.SaveChanges();
+            return RedirectToAction(nameof(Details), new RouteValueDictionary(new { id = user.Id }));
+        }
+
 
         // GET: UserController/Delete/5
         public ActionResult Delete(int id)

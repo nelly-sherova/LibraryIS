@@ -29,10 +29,9 @@ namespace LibraryIS.Controllers
                 .GroupBy(b => new { b.Name})
                 .Select(group => new BookIndexViewModel
                 {
-                   
                     Name = group.Key.Name,
                     BookCount = group.Count(),
-                  
+
                 })
             .ToList();
 

@@ -16,7 +16,7 @@
                 <div class="row mt-3">
                     <div class="col-md-12"><label class="labels">Отчество</label><input type="text" class="form-control" placeholder="@Model.MiddleName" value="" readonly ="True"></div>
                     <div class="col-md-12"><label class="labels">Дата рождения</label><input type="text" class="form-control" placeholder="@Model.DateOfBirth" readonly="True" value=""></div>
-                    <div class="col-md-12"><label class="labels">Категория</label><input type="text" class="form-control" placeholder="@Model.Role.Name" readonly="True" value=""></div>
+                    <div class="col-md-12"><label class="labels">Роль</label><input type="text" class="form-control" placeholder="@Model.Role.Name" readonly="True" value=""></div>
                     <div class="col-md-12"><label class="labels">Номер телефона</label><input type="text" class="form-control" placeholder="@Model.PhoneNumber" readonly="True" value=""></div>
                     <div class="col-md-12"><label class="labels">Электронная почта</label><input type="text" class="form-control" placeholder="@Model.Email" readonly="True" value=""></div>
                     <div class="col-md-12"><label class="labels">Пол</label><input type="text" class="form-control" placeholder="@Model.Sex" readonly="True" value=""></div>
@@ -27,8 +27,12 @@
                     <div class="col-md-6"><label class="labels">Город</label><input type="text" class="form-control" readonly="True" value="" placeholder="@Model.City"></div>
                 </div> 
               @*   <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Изменить профиль</button></div> *@
-                <div><a href="../User/Edit?id=@Model.Id" class="btn btn-primary">Изменить</a></div>
+                
              
+            </div>
+            <div style="display:flex; justify-content:space-between"> 
+            <div><a href="../User/Edit?id=@Model.Id" class="btn btn-primary">Изменить</a></div>
+                <div><a href="../User/EditRole?userId=@Model.Id" class="btn btn-primary">Изменить роль</a></div>
             </div>
         </div>
         <div class="col-md-4">
