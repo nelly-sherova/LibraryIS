@@ -2,6 +2,7 @@
 using LibraryIS.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryIS.Controllers
 {
@@ -89,26 +90,36 @@ namespace LibraryIS.Controllers
                 return View();
             }
         }
-    
-
-        // GET: AuthorController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Restore(int id)
         {
-            return View();
+            var author = context.Authors.Where(a => a.Id == id).FirstOrDefault();
+            author.Visible = true;
+            context.Update(author);
+            context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+        public ActionResult DeleteBasket(int id)
+        {
+            var author = context.Authors.Where(a => a.Id == id).FirstOrDefault();
+            author.Visible = false;
+            context.Update(author); 
+            context.SaveChanges();  
+            return RedirectToAction(nameof(AuthorBasket));
         }
 
-        // POST: AuthorController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        // GET: AuthorController/Delete/5
+      
+
+   
+        public ActionResult Delete(int id)
         {
             try
             {
-                var data = context.Books.Where(b => b.Id == id).FirstOrDefault();   
-                if(data == null) return NotFound();
-                context.Books.Remove(data);
+                var data = context.Authors.Where(a => a.Id == id).FirstOrDefault();
+                context.Authors.Remove(data);
                 context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction(nameof(AuthorBasket));
             }
             catch
             {

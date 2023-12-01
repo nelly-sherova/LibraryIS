@@ -154,22 +154,31 @@ namespace LibraryIS.Controllers
             context.SaveChanges();
             return RedirectToAction(nameof(Details), new RouteValueDictionary(new { id = user.Id }));
         }
-
-
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult DeleteBasket(int id)
         {
-            return View();
+            var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
+            data.Visible = false;
+            context.Users.Update(data);
+            context.SaveChanges();
+            return RedirectToAction(nameof(UserBasket));
+          
+        }
+        public ActionResult Restore(int id )
+        {
+
+            var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
+            data.Visible = true;
+            context.Users.Update(data);
+            context.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
 
-        // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, User user)
+     
+        public ActionResult Delete(int id)
         {
             try
             {
-                var data = context.Users.Where(u => u.Id == id);
+                var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
                 context.Remove(data);
                 context.SaveChanges(); 
                 return RedirectToAction(nameof(Index));

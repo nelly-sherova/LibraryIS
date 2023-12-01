@@ -21,6 +21,8 @@
                 <th>Категория</th>
                 <th>Язык</th>
                 <th>Подробно</th>
+                <th>Изменить</th>
+                <th>Удалить</th>
             </tr>
         </thead>
         <tbody>
@@ -46,6 +48,8 @@
                     </td>
                     <td>@book.Language</td>
                     <td><a href="Details?id=@book.Id">Details</a></td>
+                    <td><a href="../Book/Edit?id=@book.Id">Изменить</a></td>
+                    <td><a href="../Book/DeleteForBasket?id=@book.Id">Удалить</a></td>
                 </tr>
             }
 

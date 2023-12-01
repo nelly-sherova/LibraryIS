@@ -7,7 +7,7 @@
     <title>Authors</title>
 </head>
 <body>
-    <h1>Авторы</h1>
+    <h1>Удаленные авторы</h1>
 
 
     <table class="table table-hover">
@@ -16,7 +16,8 @@
                 <th>Идентификатор</th>
                 <th>ФИО</th>
                 <th>Об авторе</th>
-            
+                 <th>Восстановить</th>
+                 <th>Удалить</th>
 
             </tr>
         </thead>
@@ -27,7 +28,8 @@
                     <td>@author.Id</td>
                     <td>@author.FullName</td>
                     <td>@author.Description</td>
-
+                    <td><a href="../Author/Restore?id=@author.Id">Восстановить</a></td>
+                    <td><a href="../Author/Delete?id=@author.Id">Удалить навсегда</a></td>
                 </tr>
             }
 

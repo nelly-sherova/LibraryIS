@@ -19,7 +19,7 @@ namespace LibraryIS.Controllers
         // GET: RoleController
         public ActionResult Index()
         {
-            var roles = context.Roles.ToList();
+            var roles = context.Roles.Where(r => r.Visible == true).ToList();
             if (!roles.Any())
                 return BadRequest();
             return View(roles);
@@ -48,6 +48,7 @@ namespace LibraryIS.Controllers
            
             try
             {
+                role.Visible = true;
                 context.Roles.Add(role);
                 context.SaveChanges();  
                 return RedirectToAction(nameof(Index));
@@ -87,17 +88,31 @@ namespace LibraryIS.Controllers
                 return View();
             }
         }
-
-        // GET: RoleController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult RoleBasket()
         {
-            return View();
+            var roles = context.Roles.Where(r => r.Visible == false).ToList();
+            return View(roles); 
         }
+        public ActionResult DeleteBasket(int id)
+        {
+            var role = context.Roles.Where(r => r.Id == id).FirstOrDefault();
+            role.Visible = false;
+            context.Update(role);
+            context.SaveChanges();
 
-        // POST: RoleController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+            return RedirectToAction(nameof(RoleBasket));
+        }
+        public ActionResult Restore(int id)
+        {
+            var role = context.Roles.Where(r => r.Id == id).FirstOrDefault();
+            role.Visible = true;
+            context.Update(role);
+            context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+
+        }
+        
+        public ActionResult Delete(int id)
         {
             try
             {

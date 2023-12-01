@@ -242,17 +242,19 @@ namespace LibraryIS.Controllers
 			var book = context.Books.Where(b=> b.Id == id).FirstOrDefault();
 			if (book == null)
 				return BadRequest();
+            ViewBag.Book = book;
+            ViewBag.Id = book.Id;
 			return View(book);
 		}
 
 		// POST: BookController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, Book book)
+		public ActionResult Edit(Book book)
 		{
 			try
 			{
-				var data = context.Books.Where(b => b.Id == id).FirstOrDefault();
+				var data = context.Books.Where(b => b.Id == book.Id).FirstOrDefault();
 				if(data != null)
 				{
 					data.Name = book.Name;
@@ -260,26 +262,46 @@ namespace LibraryIS.Controllers
 					data.PublicationCity = book.PublicationCity;	
 					data.Publication = book.Publication;
 					data.Language = book.Language;
-					context.SaveChanges();
+                    data.PublicationDate = book.PublicationDate;
+                    data.CountOfPages = book.CountOfPages;
+                    data.Binding = book.Binding;
+                    data.State = book.State;
 				}
-				return RedirectToAction(nameof(Index));
-			}
+                context.Update(data);
+                context.SaveChanges();
+                return RedirectToAction(nameof(DetailsCollection), new RouteValueDictionary(new { name = book.Name }));
+            }
 			catch
 			{
 				return View();
 			}
 		}
 
-		// GET: BookController/Delete/5
-		public ActionResult Delete(int id)
-		{
-			return View();
-		}
 
-		// POST: BookController/Delete/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, IFormCollection collection)
+
+
+        public ActionResult DeleteForBasket(int id)
+        {
+            var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
+            book.Visible = false;
+            context.Update(book);
+            context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+        public ActionResult Restore(int id)
+        {
+            var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
+            book.Visible = true;
+            context.Update(book);
+            context.SaveChanges();
+            return RedirectToAction(nameof(DetailsCollection), new RouteValueDictionary(new {name = book.Name}));
+        }
+
+
+
+       
+		
+		public ActionResult Delete(int id)
 		{
 			try
 			{

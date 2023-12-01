@@ -7,7 +7,7 @@
     <title>Categories</title>
 </head>
 <body>
-    <h1>Пользователи</h1>
+    <h1>Удаленные пользователи</h1>
 
 
     <table class="table table-hover">
@@ -22,7 +22,8 @@
                 <th>Номер телефона</th>
                 <th>Роль</th>
                 <th>Подробно</th>
-
+                <th>Восстановить</th>
+                <th>Удалить</th>
 
             </tr>
         </thead>
@@ -42,6 +43,18 @@
                     <td>
 
                         <a href="../User/Details?id=@user.Id">Details</a>
+
+
+                    </td>
+                    <td>
+
+                        <a href="../User/Restore?id=@user.Id">Восстановить</a>
+
+
+                    </td>
+                      <td>
+
+                        <a href="../User/Delete?id=@user.Id">Удалить навсегда</a>
 
 
                     </td>

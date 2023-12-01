@@ -19,6 +19,8 @@
                 <th>Состояние</th>
                 <th>Язык</th>
                 <th>Подробно</th>
+                <th>Восстановить</th>
+                <th>Удалить</th>
                 
             </tr>
         </thead>
@@ -32,6 +34,8 @@
                     <td>@book.State</td>
                     <td>@book.Language</td>
                     <td><a href="Details?id=@book.Id">Details</a></td>
+                    <td><a href="Restore?id=@book.Id">Восстановить</a></td>
+                    <td><a href="Delete?id=@book.Id">Удалить навсегда</a></td>
                 </tr>
             }
 

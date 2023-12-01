@@ -1,22 +1,25 @@
 ﻿@model User
 
 <form method="post" asp-action="Create">
-    <div class="form-group">
-        <label asp-for="FirstName"> Фамилия</label>
-        <input asp-for="FirstName" class="form-control" placeholder=" Фамилия" style="margin-bottom: 1rem;">
-        <span asp-validation-for="FirstName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="LastName">  Имя</label>
-        <input asp-for="LastName" class="form-control" placeholder=" Имя" style="margin-bottom: 1rem;">
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
+      <div style="display:flex; justify-content:space-between">
+        <div class="form-group">
+            <label asp-for="FirstName"> Фамилия</label>
+            <input asp-for="FirstName" class="form-control" placeholder=" Фамилия" style="margin-bottom: 1rem;">
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="LastName">  Имя</label>
+            <input asp-for="LastName" class="form-control" placeholder=" Имя" style="margin-bottom: 1rem;">
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-    <label asp-for="MiddleName"> Отчество</label>
-        <input asp-for="MiddleName" class="form-control" placeholder="Отчество" style="margin-bottom: 1rem;">
-        <span asp-validation-for="MiddleName" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="MiddleName"> Отчество</label>
+            <input asp-for="MiddleName" class="form-control" placeholder="Отчество" style="margin-bottom: 1rem;">
+            <span asp-validation-for="MiddleName" class="text-danger"></span>
+        </div>
+      </div>
+   
 
     <div class="form-group">
         <label asp-for="Email">Email адрес</label>

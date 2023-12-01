@@ -7,7 +7,7 @@
     <title>Roles</title>
 </head>
 <body>
-    <h1> Роли пользователей</h1>
+    <h1> Удаленные роли пользователей</h1>
 
 
     <table class="table table-hover">
@@ -16,9 +16,8 @@
                 <th>Идентификатор</th>
                 <th>Название</th>
                 <th>Описание</th>
-                <th>Изменить</th>
+                <th>Восстановаить</th>
                 <th>Удалить</th>
-               
 
             </tr>
         </thead>
@@ -29,8 +28,8 @@
                     <td>@role.Id</td>
                     <td>@role.Name</td>
                     <td>@role.Description</td>
-                    <td><a href="Role/Edit?id=@role.Id">Изменить</a></td>
-                    <td><a href="Role/DeleteBasket?id=@role.Id">Удалить</a></td>
+                    <td><a href="../Role/Restore?id=@role.Id">Восстановить</a></td>
+                    <td><a href="../Role/Delete?id=@role.Id">Удалить навсегда</a></td>
                 </tr>
             }
 
@@ -38,7 +37,7 @@
 
         </tbody>
     </table>
-    <a href="Role/Create" class="btn btn-primary">Добавить</a>
+
 </body>
 </html>
 

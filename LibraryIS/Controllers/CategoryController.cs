@@ -3,6 +3,7 @@ using LibraryIS.Models;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 
 namespace LibraryIS.Controllers
 {
@@ -16,7 +17,7 @@ namespace LibraryIS.Controllers
         // GET: CategoryController
         public ActionResult Index()
         {
-            var categories = context.Categories.ToList();
+            var categories = context.Categories.Where(c => c.Visible == true).ToList();
             if(!categories.Any())
             {
                 return BadRequest();  
@@ -49,6 +50,7 @@ namespace LibraryIS.Controllers
            
             try
             {
+                category.Visible = true;
                 context.Categories.Add(category);
                 context.SaveChanges();
                 return RedirectToAction(nameof(Index));
@@ -98,11 +100,31 @@ namespace LibraryIS.Controllers
             }
         }
 
-       
+        
+        public ActionResult CategoryBasket() 
+        {
+            var categories = context.Categories.Where(c => c.Visible == false).ToList();
+            return View(categories);
+        }
+        public ActionResult DeleteBasket(int id)
+        {
+            var category = context.Categories.Where(c => c.Id == id).FirstOrDefault();
+            category.Visible = false;
+            context.Categories.Update(category);
+            context.SaveChanges();
+            return RedirectToAction(nameof(CategoryBasket));
+        }
+        public ActionResult Restore(int id)
+        {
+            var category = context.Categories.Where(c => c.Id == id).FirstOrDefault();
+            category.Visible = true;
+            context.Categories.Update(category);
+            context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
 
-        // POST: CategoryController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+
+      
         public ActionResult Delete(int id)
         {
             try
