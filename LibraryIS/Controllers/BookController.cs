@@ -2,6 +2,8 @@
 using LibraryIS.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using System.Linq;
 using System.Net;
 
 namespace LibraryIS.Controllers
@@ -219,6 +221,7 @@ namespace LibraryIS.Controllers
                 bookUser.Book = context.Books.Where(b => b.Id == bookUser.BookId).FirstOrDefault();
                 bookUser.Book.IssueDate = DateTime.Now;
                 bookUser.Book.RetunDate = bookUser.Book.IssueDate.AddDays(30);
+                bookUser.Book.IsFramed = true;
                 context.BookUser.Add(bookUser);
                 context.SaveChanges();
             }
@@ -316,6 +319,75 @@ namespace LibraryIS.Controllers
 			}
 		}
 
-        
-	}
+        public ActionResult Overdue()
+        {
+            try
+            {
+                var books = context.Books.Where(b => b.RetunDate <= DateTime.UtcNow 
+                && b.Visible == true
+                && b.RetunDate >= new DateTime(2000,01,01)
+                && b.IsFramed == true
+                ).ToList();
+
+                foreach (var item in books)
+                {
+                    item.BookAuthor = context.BookAuthor.Where(bu => bu.BookId == item.Id).ToList();
+
+                    foreach (var author in item.BookAuthor)
+                    {
+                        author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                    }
+                }
+                foreach (var item in books)
+                {
+                    item.BookCategory = context.BookCategory.Where(bc => bc.BookId == item.Id).ToList();
+                    foreach (var category in item.BookCategory)
+                    {
+                        category.Category = context.Categories.FirstOrDefault(c => c.Id == category.CategoryId);
+                    }
+                }
+                foreach(var item in books)
+                {
+                    item.BookUsers = context.BookUser.Where(bu => bu.BookId == item.Id).ToList();
+                    foreach(var user in item.BookUsers)
+                    {
+                        user.User = context.Users.FirstOrDefault(u => u.Id ==  user.UserId);
+
+                    }    
+                }
+               
+                return View(books);
+            }
+            catch
+            {
+                return View();
+            }
+          
+        }
+
+     
+        public ActionResult Return(int bookid)
+        {
+            try
+            {
+                var book = context.Books.Where(b => b.Id == bookid).FirstOrDefault();
+               
+                var bookusers = context.BookUser.Where(bu => bu.BookId == book.Id).ToList();
+                book.IsFramed = false;
+                context.Books.Update(book);
+                context.RemoveRange(bookusers);
+                context.SaveChanges();
+                return RedirectToAction("Overdue");   
+            }
+            catch
+            {
+                return View();
+            }
+            
+            
+        }
+
+
+
+    }
 }

@@ -7,7 +7,7 @@
     <title>Books</title>
 </head>
 <body>
-    <h1>Список</h1>
+    <h1>Список книг которых должны вернуть задолжники</h1>
 
 
     <table class="table table-hover">
@@ -20,10 +20,11 @@
                 <th>Автор</th>
                 <th>Категория</th>
                 <th>Язык</th>
-                <th>Состояние</th>
+                <th>Задолжник</th>
+                <th>Дата возврата</th>
                 <th>Подробно</th>
-                <th>Изменить</th>
-                <th>Удалить</th>
+                <th>Возврат</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -34,31 +35,31 @@
                     <td>@book.Name</td>
                     <td>@book.Publication</td>
                     <td>@book.State</td>
-                    <td>   
-                        @foreach(var authors in book.BookAuthor)
+                    <td>
+                        @foreach (var authors in book.BookAuthor)
                         {
-                             @String.Format("{0} ",authors.Author.FullName)
+                            @String.Format("{0} ",authors.Author.FullName)
                         }
                     </td>
                     <td>
                         @foreach (var category in book.BookCategory)
                         {
                             @String.Format("{0} ", category.Category.Name)
-                                               
+
                         }
                     </td>
                     <td>@book.Language</td>
-                    @if (book.IsFramed == true)
-                    {
-                        <td style="color: red ; font-weight: bold">Занята</td>
-                    }
-                    @if (book.IsFramed == false)
-                    {
-                        <td style="color: #00FF00; font-weight: bold">Свободна</td>
-                    }
+                    <td>
+                        @foreach(var user in book.BookUsers)
+                        {
+                            <a href="../User/Details?id=@user.User.Id">
+                                @String.Format("{0} ", user.User.FirstName)
+                            </a>
+                        }
+                    </td>
+                      <td>@book.RetunDate</td>
                     <td><a href="Details?id=@book.Id">Details</a></td>
-                    <td><a href="../Book/Edit?id=@book.Id">Изменить</a></td>
-                    <td><a href="../Book/DeleteForBasket?id=@book.Id">Удалить</a></td>
+                    <td><a href="Return?bookid=@book.Id">Оформить возврат</a></td>
                 </tr>
             }
 

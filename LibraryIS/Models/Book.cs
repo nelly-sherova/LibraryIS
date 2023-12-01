@@ -19,6 +19,7 @@ namespace LibraryIS.Models
 		public int Collection { get; set; }
 		public DateTime IssueDate { get; set; }
 		public DateTime RetunDate { get; set; }
+		public bool IsFramed { get; set; }	
 		public ICollection<BookAuthor>? BookAuthor { get; set; }
 		public ICollection<BookCategory>? BookCategory { get; set; }	
 		public ICollection<BookUser>? BookUsers { get; set; }	

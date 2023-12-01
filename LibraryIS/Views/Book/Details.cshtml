@@ -15,8 +15,11 @@
                     <h4 class="box-title mt-5">О книге</h4>
                     <p>@Model.Description</p>
          
-     
-                    <a href="../Book/AddUser?bookid=@Model.Id" class="btn btn-primary">Оформить книгу</a>
+                    @if(Model.IsFramed == false)
+                    {
+                        <a href="../Book/AddUser?bookid=@Model.Id" class="btn btn-primary">Оформить книгу</a>
+                    }
+                   
                    
                    
                 </div>
@@ -60,6 +63,17 @@
                                 <tr>
                                     <td>Состояние</td>
                                     <td>@Model.State</td>
+                                </tr>
+                                <tr>
+                                    <td>Состояние занятости</td>
+                                    @if(Model.IsFramed == true)
+                                    {
+                                        <td style="color: red ; font-weight: bold">Занята</td>
+                                    }
+                                    @if (Model.IsFramed == false)
+                                    {
+                                        <td style="color: #00FF00; font-weight: bold">Свободна</td>
+                                    }
                                 </tr>
                                 <tr>
                                     <td>Язык</td>

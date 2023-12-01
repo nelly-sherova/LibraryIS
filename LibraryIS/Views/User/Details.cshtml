@@ -58,7 +58,7 @@
                     <th>Дата оформления</th>
                     <th>Дата возврата</th>
                     <th>Подробнее</th>
-
+                    <th>Возврат</th>
 
                 </tr>
             </thead>
@@ -74,6 +74,7 @@
                         <td>@book.Book.IssueDate</td>
                         <td>@book.Book.RetunDate</td>
                         <td><a href="../Book/Details?id=@book.BookId">Details</a></td>
+                        <td><a href="../Book/Return?bookid=@book.BookId">Оформить возврат</a></td>
                     </tr>
                 }
 
