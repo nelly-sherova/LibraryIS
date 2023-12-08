@@ -1,85 +1,108 @@
 ﻿@model User
 
-<form method="post" asp-action="Create">
-      <div style="display:flex; justify-content:space-between">
-        <div class="form-group">
-            <label asp-for="FirstName"> Фамилия</label>
-            <input asp-for="FirstName" class="form-control" placeholder=" Фамилия" style="margin-bottom: 1rem;">
-            <span asp-validation-for="FirstName" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="LastName">  Имя</label>
-            <input asp-for="LastName" class="form-control" placeholder=" Имя" style="margin-bottom: 1rem;">
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
+<div class="container">
+    <form method="post" asp-action="Create">
+        <div style="display:flex;margin-right: 10px;">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="FirstName"> Фамилия</label>
+                        <input asp-for="FirstName" class="form-control" placeholder=" Фамилия" style="margin-bottom: 1rem;">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="LastName">  Имя</label>
+                        <input asp-for="LastName" class="form-control" placeholder=" Имя" style="margin-bottom: 1rem;">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="MiddleName"> Отчество</label>
+                        <input asp-for="MiddleName" class="form-control" placeholder="Отчество" style="margin-bottom: 1rem;">
+                        <span asp-validation-for="MiddleName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Email">Email адрес</label>
+                        <input asp-for="Email" class="form-control" placeholder="email" style="margin-bottom: 1rem;">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="DateOfBirth"> Дата рождения</label>
+                        <input asp-for="DateOfBirth" type="date" class="form-control" style="margin-bottom: 1rem;">
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber">Номер телефона</label>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="0000000000" style="margin-bottom: 1rem;">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Sex">Пол</label>
+                        <select asp-for="Sex" class="form-control" style="margin-bottom: 1rem;">
+                            <option value="">Не выбрано</option>
+                            <option value="Мужской">Мужской</option>
+                            <option value="Женский">Женский</option>
+                        </select>
+                        <span asp-validation-for="Sex" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for=" Country">Страна</label>
+                        <input asp-for="Country" class="form-control" placeholder="Страна" style="margin-bottom: 1rem;">
+                        <span asp-validation-for="Country" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Region">Регион</label>
+                        <input asp-for="Region" class="form-control" placeholder="Регион" style="margin-bottom: 1rem;">
+                        <span asp-validation-for="Region" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="City">Город</label>
+                        <input asp-for="City" class="form-control" placeholder="Город" style="margin-bottom: 1rem;">
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="PicUrl">Картинка</label>
+                        <input asp-for="PicUrl" class="form-control" placeholder="Картинка" style="margin-bottom: 1rem;">
+                        <span asp-validation-for="PicUrl" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="RoleId">Роль пользователя</label>
+                        <select asp-for="RoleId" class="form-control" style="margin-bottom: 1rem;">
+                            <option value="">--Выберите--</option>
+                            @foreach (var role in ViewBag.Roles)
+                            {
+                                <option value="@role.Id">@role.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="RoleId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="MiddleName"> Отчество</label>
-            <input asp-for="MiddleName" class="form-control" placeholder="Отчество" style="margin-bottom: 1rem;">
-            <span asp-validation-for="MiddleName" class="text-danger"></span>
-        </div>
-      </div>
-   
-
-    <div class="form-group">
-        <label asp-for="Email">Email адрес</label>
-        <input asp-for="Email" class="form-control" placeholder="email" style="margin-bottom: 1rem;">
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="DateOfBirth"> Дата рождения</label>
-        <input asp-for="DateOfBirth"  type="date" class="form-control"  style="margin-bottom: 1rem;">
-        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="PhoneNumber">Номер телефона</label>
-        <input asp-for="PhoneNumber"  class="form-control" placeholder="0000000000" style="margin-bottom: 1rem;">
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Sex">Пол</label>
-        <select asp-for="Sex" class="form-control" style="margin-bottom: 1rem;">
-            <option value="">Не выбрано</option>
-            <option value="Мужской">Мужской</option>
-            <option value="Женский">Женский</option>
-        </select>
-        <span asp-validation-for="Sex" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for=" Country">Страна</label>
-        <input asp-for="Country" class="form-control" placeholder="Страна" style="margin-bottom: 1rem;">
-        <span asp-validation-for="Country" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Region">Регион</label>
-        <input asp-for="Region" class="form-control" placeholder="Регион" style="margin-bottom: 1rem;">
-        <span asp-validation-for="Region" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="City">Город</label>
-        <input asp-for="City" class="form-control" placeholder="Город" style="margin-bottom: 1rem;">
-        <span asp-validation-for="City" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="PicUrl">Картинка</label>
-        <input asp-for="PicUrl" class="form-control" placeholder="Картинка" style="margin-bottom: 1rem;">
-        <span asp-validation-for="PicUrl" class="text-danger"></span>
-    </div>
+          </div>
 
 
-    <div class="form-group">
-        <label asp-for="RoleId">Роль пользователя</label>
-        <select asp-for="RoleId" class="form-control" style="margin-bottom: 1rem;">
-            <option value="">--Выберите--</option>
-            @foreach (var role in ViewBag.Roles)
-            {
-                <option value="@role.Id">@role.Name</option>
-            }
-        </select>
-        <span asp-validation-for="RoleId" class="text-danger"></span>
-    </div>
-
-
-
-    <button type="submit" class="btn btn-primary">Добавить</button>
-</form>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+</div>

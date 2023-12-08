@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "/Views/Shared/UserLayout.cshtml";
+}
+@model IEnumerable<Book>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+</head>
+<body>
+    <h1>Список</h1>
+
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td>Идентификатор</td>
+                <th>Название</th>
+                <th>Публикация</th>
+                <th>Состояние</th>
+                <th>Автор</th>
+                <th>Категория</th>
+                <th>Язык</th>
+                <th>Состояние</th>
+                <th>Подробно</th>
+              
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Id</td>
+                    <td>@book.Name</td>
+                    <td>@book.Publication</td>
+                    <td>@book.State</td>
+                    <td>
+                        @foreach (var authors in book.BookAuthor)
+                        {
+                            @String.Format("{0} ",authors.Author.FullName)
+                        }
+                    </td>
+                    <td>
+                        @foreach (var category in book.BookCategory)
+                        {
+                            @String.Format("{0} ", category.Category.Name)
+
+                        }
+                    </td>
+                    <td>@book.Language</td>
+                    @if (book.IsFramed == true)
+                    {
+                        <td style="color: red ; font-weight: bold">Занята</td>
+                    }
+                    @if (book.IsFramed == false)
+                    {
+                        <td style="color: #00FF00; font-weight: bold">Свободна</td>
+                    }
+                    <td><a href="DetailsUser?id=@book.Id">Details</a></td>
+                 
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</body>
+</html>

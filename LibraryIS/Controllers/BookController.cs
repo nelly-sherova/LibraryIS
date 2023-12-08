@@ -5,17 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using System.Linq;
 using System.Net;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace LibraryIS.Controllers
 {
 	public class BookController : Controller
 	{
 
-		private DataContext context; 
-      
-		public BookController(DataContext context)
+		private DataContext context;
+        IWebHostEnvironment _appEnvironment;
+
+        public BookController(DataContext context, IWebHostEnvironment _appEnvironment)
 		{
 			this.context = context;
+            this._appEnvironment = _appEnvironment;
         }
         // GET: BookController
         public ActionResult Index()
@@ -42,6 +48,31 @@ namespace LibraryIS.Controllers
                 return NotFound();
             }
           
+            return View(books);
+        }
+        public ActionResult IndexUser()
+        {
+            if (!context.Books.Any())
+            {
+                return BadRequest();
+            }
+
+            var books = context.Books
+                .Where(b => b.Visible == true)
+                .GroupBy(b => new { b.Name })
+                .Select(group => new BookIndexViewModel
+                {
+                    Name = group.Key.Name,
+                    BookCount = group.Count(),
+
+                })
+            .ToList();
+
+            if (books == null)
+            {
+                return NotFound();
+            }
+
             return View(books);
         }
         public IActionResult Basket()
@@ -82,6 +113,30 @@ namespace LibraryIS.Controllers
             }
             return View(books);
         }
+        public IActionResult DetailsCollectionUser(string name)
+        {
+            var books = context.Books.Where(b => b.Visible == true && b.Name == name).ToList();
+            if (books == null)
+                return NotFound();
+
+            foreach (var item in books)
+            {
+                item.BookAuthor = context.BookAuthor.Where(bu => bu.BookId == item.Id).ToList();
+                foreach (var author in item.BookAuthor)
+                {
+                    author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                }
+            }
+            foreach (var item in books)
+            {
+                item.BookCategory = context.BookCategory.Where(bc => bc.BookId == item.Id).ToList();
+                foreach (var category in item.BookCategory)
+                {
+                    category.Category = context.Categories.FirstOrDefault(c => c.Id == category.CategoryId);
+                }
+            }
+            return View(books);
+        }
         // GET: BookController/Details/5
         public ActionResult Details(int id)
         {
@@ -101,6 +156,24 @@ namespace LibraryIS.Controllers
 
            
         }
+        public ActionResult DetailsUser(int id)
+        {
+            var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
+            if (book == null) return NotFound();
+            book.BookAuthor = context.BookAuthor.Where(ba => ba.BookId == id).ToList();
+            foreach (var author in book.BookAuthor)
+            {
+                author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+            }
+            book.BookCategory = context.BookCategory.Where(ba => ba.BookId == id).ToList();
+            foreach (var category in book.BookCategory)
+            {
+                category.Category = context.Categories.FirstOrDefault(a => a.Id == category.CategoryId);
+            }
+            return View(book);
+
+
+        }
 
         // GET: BookController/Create
         public ActionResult Create()
@@ -113,12 +186,39 @@ namespace LibraryIS.Controllers
 		// POST: BookController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Book book)
+        public async Task<IActionResult> Create(AddBookViewModel bookView)
         {
             try
             {
-                context.Books.Add(book);
-                context.SaveChanges();
+                
+                Book book = new Book();
+                if (bookView.FileStream != null)
+                {
+                    string path = "/img/" + bookView.FileStream.FileName;
+                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                    {
+                        await bookView.FileStream.CopyToAsync(fileStream);
+                    }
+                    book.PicUrl = path;
+                }
+             
+              if(bookView.FileStream != null)
+                          
+                      
+
+                        book.Name = bookView.Name;
+                        book.State = bookView.State;
+                        book.CountOfPages = bookView.CountOfPages;
+                        book.Language = bookView.Language;
+                        book.Description = bookView.Description;
+                        book.PublicationCity = bookView.PublicationCity;
+                        book.PublicationDate = bookView.PublicationDate;
+                        book.Publication = bookView.Publication;
+                        book.Binding = bookView.Binding;
+                        context.Books.Add(book);
+                        context.SaveChanges();
+
+                
                 return RedirectToAction(nameof(AddCategories), new RouteValueDictionary(new { bookid = book.Id }));
             }
             catch (Exception ex)
@@ -128,7 +228,7 @@ namespace LibraryIS.Controllers
             return View();
            
         }
-
+       
 
 
         public ActionResult AddCategories(int bookid)
@@ -213,14 +313,20 @@ namespace LibraryIS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddUser(BookUser bookUser)
+        public ActionResult AddUser(BookUserVM bookUserVM)
         {
+            BookUser bookUser = new BookUser();
             try
             {
+               
+                bookUser.UserId = bookUserVM.UserId;
+                bookUser.BookId = bookUserVM.BookId;
+
                 bookUser.User = context.Users.Where(u => u.Id == bookUser.UserId).FirstOrDefault();
                 bookUser.Book = context.Books.Where(b => b.Id == bookUser.BookId).FirstOrDefault();
                 bookUser.Book.IssueDate = DateTime.Now;
-                bookUser.Book.RetunDate = bookUser.Book.IssueDate.AddDays(30);
+                bookUser.Book.RetunDate = bookUserVM.ReturnDate;
+               
                 bookUser.Book.IsFramed = true;
                 context.BookUser.Add(bookUser);
                 context.SaveChanges();
@@ -245,34 +351,61 @@ namespace LibraryIS.Controllers
 			var book = context.Books.Where(b=> b.Id == id).FirstOrDefault();
 			if (book == null)
 				return BadRequest();
+            AddBookViewModel bookwm = new AddBookViewModel();
+            bookwm.Id = id;
+            bookwm.Name = book.Name;
+            bookwm.Publication = book.Publication;
+            bookwm.Description = book.Description;
+            bookwm.PublicationCity = book.PublicationCity;
+            bookwm.PublicationDate = book.PublicationDate;
+            bookwm.Language = book.Language;
+            bookwm.Binding = book.Binding;
+            bookwm.CountOfPages = book.CountOfPages;
+            bookwm.State =  book.State;
             ViewBag.Book = book;
             ViewBag.Id = book.Id;
-			return View(book);
+			return View(bookwm);
 		}
 
 		// POST: BookController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(Book book)
+		public async Task<IActionResult> Edit(AddBookViewModel bookwm)
 		{
 			try
 			{
-				var data = context.Books.Where(b => b.Id == book.Id).FirstOrDefault();
+                var data = context.Books.Where(b => b.Id == bookwm.Id).FirstOrDefault();
+                var file = bookwm.FileStream;
+                var name = file.FileName;
+                var path = "/img/" + bookwm.FileStream.FileName;
+                if (bookwm.FileStream != null)
+                {
+                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                    {
+                        await bookwm.FileStream.CopyToAsync(fileStream);
+                    }
+
+
+
+
+                    data.PicUrl = path;
+                }
+               
 				if(data != null)
 				{
-					data.Name = book.Name;
-					data.Description = book.Description;
-					data.PublicationCity = book.PublicationCity;	
-					data.Publication = book.Publication;
-					data.Language = book.Language;
-                    data.PublicationDate = book.PublicationDate;
-                    data.CountOfPages = book.CountOfPages;
-                    data.Binding = book.Binding;
-                    data.State = book.State;
+					data.Name = bookwm.Name;
+					data.Description = bookwm.Description;
+					data.PublicationCity = bookwm.PublicationCity;	
+					data.Publication = bookwm.Publication;
+					data.Language = bookwm.Language;
+                    data.PublicationDate = bookwm.PublicationDate;
+                    data.CountOfPages = bookwm.CountOfPages;
+                    data.Binding = bookwm.Binding;
+                    data.State = bookwm.State;
 				}
                 context.Update(data);
                 context.SaveChanges();
-                return RedirectToAction(nameof(DetailsCollection), new RouteValueDictionary(new { name = book.Name }));
+                return RedirectToAction(nameof(DetailsCollection), new RouteValueDictionary(new { name = bookwm.Name }));
             }
 			catch
 			{

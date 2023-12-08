@@ -11,21 +11,21 @@ namespace LibraryIS.Controllers
     {
         private DataContext context;
 
-        public UserController(DataContext context) 
+        public UserController(DataContext context)
         {
-            this.context = context; 
+            this.context = context;
         }
         // GET: UserController
         public ActionResult Index()
         {
             var users = context.Users.Where(u => u.Visible == true).ToList();
-            if (users.Count <= 0 )
+            if (users.Count <= 0)
                 return BadRequest();
             foreach (var user in users)
             {
                 user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
             }
-          
+
             return View(users);
         }
 
@@ -38,11 +38,26 @@ namespace LibraryIS.Controllers
                 return BadRequest();
             user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
             user.BookUsers = context.BookUser.Where(bu => bu.UserId == id).ToList();
-            foreach(var item in user.BookUsers)
+            foreach (var item in user.BookUsers)
             {
                 item.Book = context.Books.FirstOrDefault(b => b.Id == item.BookId);
             }
-                 
+
+            return View(user);
+        }
+        public ActionResult DetailsUser(int id)
+        {
+            var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
+
+            if (user == null)
+                return BadRequest();
+            user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
+            user.BookUsers = context.BookUser.Where(bu => bu.UserId == id).ToList();
+            foreach (var item in user.BookUsers)
+            {
+                item.Book = context.Books.FirstOrDefault(b => b.Id == item.BookId);
+            }
+
             return View(user);
         }
         public ActionResult UserBasket()
@@ -56,13 +71,13 @@ namespace LibraryIS.Controllers
             }
             return View(users);
         }
-      
+
 
         // GET: UserController/Create
         public ActionResult Create()
         {
             var roles = context.Roles.ToList();
-            ViewBag.Roles = roles;  
+            ViewBag.Roles = roles;
             return View();
         }
 
@@ -71,7 +86,7 @@ namespace LibraryIS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(User user)
         {
-            
+
             try
             {
                 user.Role = context.Roles.Where(r => r.Id == user.RoleId).FirstOrDefault();
@@ -90,7 +105,7 @@ namespace LibraryIS.Controllers
         // GET: UserController/Edit/5
         public ActionResult Edit(int id)
         {
-            var user = context.Users.Where(u => u.Id == id).FirstOrDefault();   
+            var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
             if (user == null)
                 return BadRequest();
             ViewBag.UserId = user.Id;
@@ -106,21 +121,21 @@ namespace LibraryIS.Controllers
             try
             {
                 var data = context.Users.Where(u => u.Id == user.Id).FirstOrDefault();
-                if(data != null)
+                if (data != null)
                 {
                     data.FirstName = user.FirstName;
                     data.LastName = user.LastName;
-                    data.Email = user.Email;    
-                    data.MiddleName = user.MiddleName;  
+                    data.Email = user.Email;
+                    data.MiddleName = user.MiddleName;
                     data.PhoneNumber = user.PhoneNumber;
                     data.DateOfBirth = user.DateOfBirth;
-                    data.City = user.City;  
+                    data.City = user.City;
                     data.Country = user.Country;
                     data.Region = user.Region;
-                    data.Sex = user.Sex;    
+                    data.Sex = user.Sex;
                     context.Users.Update(data);
                     context.SaveChanges();
-                   
+
 
                 }
                 return RedirectToAction(nameof(Index));
@@ -154,6 +169,26 @@ namespace LibraryIS.Controllers
             context.SaveChanges();
             return RedirectToAction(nameof(Details), new RouteValueDictionary(new { id = user.Id }));
         }
+        public ActionResult ChangePassword(int userId)
+        {
+            var user = context.Users.Where(u => u.Id == userId).FirstOrDefault();
+            ViewBag.UserId = userId;
+            ViewBag.Email = user.Email;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(User user)
+        {
+
+            var data = context.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+            data.Password = user.Password;
+            data.Email = user.Email;
+            context.Users.Update(data);
+            context.SaveChanges();
+            return RedirectToAction(nameof(DetailsSimpleUser), new RouteValueDictionary(new { id = user.Id }));
+        }
         public ActionResult DeleteBasket(int id)
         {
             var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
@@ -161,9 +196,9 @@ namespace LibraryIS.Controllers
             context.Users.Update(data);
             context.SaveChanges();
             return RedirectToAction(nameof(UserBasket));
-          
+
         }
-        public ActionResult Restore(int id )
+        public ActionResult Restore(int id)
         {
 
             var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
@@ -173,20 +208,71 @@ namespace LibraryIS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-     
+
         public ActionResult Delete(int id)
         {
             try
             {
                 var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
                 context.Remove(data);
-                context.SaveChanges(); 
+                context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+        public ActionResult LogIn()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(User user)
+        {
+            try
+            {
+                var us = context.Users.Where(u => u.Email == user.Email && u.Password == user.Password).FirstOrDefault();
+                if (us == null) {
+                    return View();
+                }
+                us.Role = context.Roles.Where(r => r.Id == us.RoleId).FirstOrDefault();
+                if(us.Role.Name == "Администратор")
+                {
+                    return RedirectToAction(nameof(AdminPanel));
+                }
+                else
+                {
+                    return RedirectToAction(nameof(DetailsSimpleUser), new RouteValueDictionary(new { id = us.Id }));
+                }
+            }
+            catch
+            {
+
+            }
+            return View();
+        }
+       
+     
+        public ActionResult DetailsSimpleUser(int id)
+        {
+            var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
+
+            if (user == null)
+                return BadRequest();
+            user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
+            user.BookUsers = context.BookUser.Where(bu => bu.UserId == id).ToList();
+            foreach (var item in user.BookUsers)
+            {
+                item.Book = context.Books.FirstOrDefault(b => b.Id == item.BookId);
+            }
+
+            return View(user);
+        }
+        public ActionResult AdminPanel()
+        {
+            return View();
         }
     }
 }

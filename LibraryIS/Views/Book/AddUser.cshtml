@@ -1,4 +1,4 @@
-﻿@model BookUser
+﻿@model BookUserVM
 
 <form method="post" asp-action="AddUser">
     <
@@ -19,8 +19,12 @@
             <input asp-for="BookId" readonly class="form-control" value="@ViewBag.BookId" style="margin-bottom: 1rem;">
             <span asp-validation-for="BookId" class="text-danger"></span>
         </div>
+        <div class="form-group">
+            <label asp-for="ReturnDate"> Дата возврата книги<</label>
+            <input asp-for="ReturnDate" type="date" class="form-control" style="margin-bottom: 1rem;">
+            <span asp-validation-for="ReturnDate" class="text-danger"></span>
+        </div>
 
-       
 
 
     </div>

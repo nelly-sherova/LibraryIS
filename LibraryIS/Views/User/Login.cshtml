@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "/Views/Shared/SimpleLayout.cshtml";
+}
+@model User
+<!-- Section: Design Block -->
+<section class="text-center">
+  <!-- Background image -->
+  <div class="p-5 bg-image" style="
+    
+        background-image: url('https://www.archrevue.ru/images/tb/3/5/1/35159/15808977845098_w800h500.jpg' );
+        height: 300px;
+background-repeat: no-repeat;
+background-size: cover;
+        "></div>
+  <!-- Background image -->
+
+  <div class="card mx-4 mx-md-5 shadow-5-strong" style="
+        margin-top: -100px;
+        background: hsla(0, 0%, 100%, 0.8);
+        backdrop-filter: blur(30px);
+        ">
+    <div class="card-body py-5 px-md-5">
+
+      <div class="row d-flex justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="fw-bold mb-5">Вход</h2>
+           <form method="post" asp-action="Login" >
+          
+
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+              <input asp-for="Email" type="email" id="form3Example3" class="form-control" />
+              <label asp-for="Email" class="form-label" for="form3Example3">Email address</label>
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+              <input asp-for="Password" type="password" id="form3Example4" class="form-control" />
+              <label asp-for="Password" class="form-label" for="form3Example4">Password</label>
+            </div>
+
+            <!-- Checkbox -->
+            <div class="form-check d-flex justify-content-center mb-4">
+              <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
+              <label class="form-check-label" for="form2Example33">
+                Подпишитесь на наши новости 
+              </label>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">
+              Войти
+            </button>
+                        
+            <!-- Register buttons -->
+           
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Section: Design Block -->
