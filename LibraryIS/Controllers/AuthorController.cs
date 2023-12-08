@@ -27,7 +27,7 @@ namespace LibraryIS.Controllers
         public ActionResult Details(int id)
         {
             var author = context.Authors.Where(a => a.Id == id).FirstOrDefault();
-            if(author == null) return NotFound();
+            if(author == null) return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = "Произашла ошибка с удалением! Повторите попытку позже!" }));
             return View(author);
         }
 
@@ -45,11 +45,20 @@ namespace LibraryIS.Controllers
            
             try
             {
-                author.Visible = true;
-                context.Authors.Add(author);
+                if(author!=null)
+                {
+                    author.Visible = true;
+                    context.Authors.Add(author);
 
-                context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                    context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = "Произашла ошибка с созданием нового автора, убедитесь в правильности оформления данных! " }));
+                }
+              
             }
             catch
             {
@@ -57,12 +66,18 @@ namespace LibraryIS.Controllers
             }
 
         }
+        public ActionResult Error(string message)
+        {
+            ErrorViewModel error = new ErrorViewModel();
+            error.message = message;
+            return View(error);
+        }
 
         // GET: AuthorController/Edit/5
         public ActionResult Edit(int id)
         {
             var author = context.Authors.Where(author => author.Id == id).FirstOrDefault();
-            if(author == null) return NotFound();
+            if(author == null) return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = "Автор не найден! Повторите попытку позже!" }));
             ViewBag.AuthorId = author.Id;
             return View(author);
         }
@@ -75,7 +90,11 @@ namespace LibraryIS.Controllers
 
             try
             {
+                if(author == null)
+                    return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = "Произашла ошибка с оформлением!" }));
                 var data = context.Authors.Where(a => a.Id == author.Id).FirstOrDefault();
+                if(data == null)
+                    return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = "Произашла ошибка с изменением! Повторите попытку позже!" }));
                 if (data != null)
                 {
                     data.FullName = author.FullName;
@@ -85,9 +104,9 @@ namespace LibraryIS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex) 
             {
-                return View();
+                return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message}));
             }
         }
         public ActionResult Restore(int id)
@@ -100,11 +119,17 @@ namespace LibraryIS.Controllers
         }
         public ActionResult DeleteBasket(int id)
         {
-            var author = context.Authors.Where(a => a.Id == id).FirstOrDefault();
-            author.Visible = false;
-            context.Update(author); 
-            context.SaveChanges();  
-            return RedirectToAction(nameof(AuthorBasket));
+            try
+            {
+                var author = context.Authors.Where(a => a.Id == id).FirstOrDefault();
+                author.Visible = false;
+                context.Update(author);
+                context.SaveChanges();
+                return RedirectToAction(nameof(AuthorBasket));
+            }
+            catch(Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+
+           
         }
 
         // GET: AuthorController/Delete/5
@@ -121,17 +146,19 @@ namespace LibraryIS.Controllers
 
                 return RedirectToAction(nameof(AuthorBasket));
             }
-            catch
-            {
-                return View();
-            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
 
         public ActionResult AuthorBasket()
         {
-            var authors = context.Authors.Where(a => a.Visible == false).ToList();
+            try
+            {
+                var authors = context.Authors.Where(a => a.Visible == false).ToList();
             
-            return View(authors);
+                return View(authors);
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+
         }
     }
 }

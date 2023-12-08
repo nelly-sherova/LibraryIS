@@ -26,54 +26,69 @@ namespace LibraryIS.Controllers
         // GET: BookController
         public ActionResult Index()
         {
-            
-            if (!context.Books.Any())
+            try
             {
-                return BadRequest();
-            }
- 
-            var books = context.Books
-                .Where(b => b.Visible == true)
-                .GroupBy(b => new { b.Name})
-                .Select(group => new BookIndexViewModel
+
+
+                if (!context.Books.Any())
                 {
-                    Name = group.Key.Name,
-                    BookCount = group.Count(),
+                    return BadRequest();
+                }
 
-                })
-            .ToList();
+                var books = context.Books
+                    .Where(b => b.Visible == true)
+                    .GroupBy(b => new { b.Name })
+                    .Select(group => new BookIndexViewModel
+                    {
+                        Name = group.Key.Name,
+                        BookCount = group.Count(),
 
-            if (books == null)
-            {
-                return NotFound();
+                    })
+                .ToList();
+
+                if (books == null)
+                {
+                    return NotFound();
+                }
+
+                return View(books);
             }
-          
-            return View(books);
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+        }
+        public ActionResult Error(string message)
+        {
+            ErrorViewModel error = new ErrorViewModel();
+            error.message = message;
+            return View(error);
         }
         public ActionResult IndexUser()
         {
-            if (!context.Books.Any())
+            try
             {
-                return BadRequest();
-            }
-
-            var books = context.Books
-                .Where(b => b.Visible == true)
-                .GroupBy(b => new { b.Name })
-                .Select(group => new BookIndexViewModel
+                if (!context.Books.Any())
                 {
-                    Name = group.Key.Name,
-                    BookCount = group.Count(),
+                    return BadRequest();
+                }
 
-                })
-            .ToList();
+                var books = context.Books
+                    .Where(b => b.Visible == true)
+                    .GroupBy(b => new { b.Name })
+                    .Select(group => new BookIndexViewModel
+                    {
+                        Name = group.Key.Name,
+                        BookCount = group.Count(),
 
-            if (books == null)
-            {
-                return NotFound();
+                    })
+                .ToList();
+
+                if (books == null)
+                {
+                    return NotFound();
+                }
+
+                return View(books);
             }
-
-            return View(books);
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public IActionResult Basket()
         {
@@ -81,96 +96,114 @@ namespace LibraryIS.Controllers
         }
         public IActionResult BookBasket()
         {
-
-            var books = context.Books.Where(b=> b.Visible == false).ToList();
-            if(books == null)
+            try
             {
-                return NotFound();
+                var books = context.Books.Where(b => b.Visible == false).ToList();
+                if (books == null)
+                {
+                    return NotFound();
+                }
+                return View(books);
             }
-            return View(books);
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public IActionResult DetailsCollection(string name)
         {
-            var books = context.Books.Where(b => b.Visible == true && b.Name == name).ToList();
-            if(books == null)
-                return NotFound();
+            try
+            {
+                var books = context.Books.Where(b => b.Visible == true && b.Name == name).ToList();
+                if (books == null)
+                    return NotFound();
 
-            foreach (var item in books)
-            {
-                item.BookAuthor = context.BookAuthor.Where(bu => bu.BookId == item.Id).ToList();
-                foreach(var author in item.BookAuthor)
+                foreach (var item in books)
                 {
-                    author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                    item.BookAuthor = context.BookAuthor.Where(bu => bu.BookId == item.Id).ToList();
+                    foreach (var author in item.BookAuthor)
+                    {
+                        author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                    }
                 }
-            }
-            foreach(var item in books)
-            {
-                item.BookCategory = context.BookCategory.Where(bc=> bc.BookId == item.Id).ToList();
-                foreach(var category in item.BookCategory)
+                foreach (var item in books)
                 {
-                    category.Category = context.Categories.FirstOrDefault(c => c.Id == category.CategoryId);
+                    item.BookCategory = context.BookCategory.Where(bc => bc.BookId == item.Id).ToList();
+                    foreach (var category in item.BookCategory)
+                    {
+                        category.Category = context.Categories.FirstOrDefault(c => c.Id == category.CategoryId);
+                    }
                 }
+                return View(books);
             }
-            return View(books);
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public IActionResult DetailsCollectionUser(string name)
         {
-            var books = context.Books.Where(b => b.Visible == true && b.Name == name).ToList();
-            if (books == null)
-                return NotFound();
+            try
+            {
+                var books = context.Books.Where(b => b.Visible == true && b.Name == name).ToList();
+                if (books == null)
+                    return NotFound();
 
-            foreach (var item in books)
-            {
-                item.BookAuthor = context.BookAuthor.Where(bu => bu.BookId == item.Id).ToList();
-                foreach (var author in item.BookAuthor)
+                foreach (var item in books)
                 {
-                    author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                    item.BookAuthor = context.BookAuthor.Where(bu => bu.BookId == item.Id).ToList();
+                    foreach (var author in item.BookAuthor)
+                    {
+                        author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                    }
                 }
-            }
-            foreach (var item in books)
-            {
-                item.BookCategory = context.BookCategory.Where(bc => bc.BookId == item.Id).ToList();
-                foreach (var category in item.BookCategory)
+                foreach (var item in books)
                 {
-                    category.Category = context.Categories.FirstOrDefault(c => c.Id == category.CategoryId);
+                    item.BookCategory = context.BookCategory.Where(bc => bc.BookId == item.Id).ToList();
+                    foreach (var category in item.BookCategory)
+                    {
+                        category.Category = context.Categories.FirstOrDefault(c => c.Id == category.CategoryId);
+                    }
                 }
+                return View(books);
             }
-            return View(books);
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         // GET: BookController/Details/5
         public ActionResult Details(int id)
         {
-            var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
-            if(book == null) return NotFound();
-            book.BookAuthor = context.BookAuthor.Where(ba => ba.BookId == id).ToList();
-            foreach (var author in book.BookAuthor)
+            try
             {
-                author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
+                if (book == null) return NotFound();
+                book.BookAuthor = context.BookAuthor.Where(ba => ba.BookId == id).ToList();
+                foreach (var author in book.BookAuthor)
+                {
+                    author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                }
+                book.BookCategory = context.BookCategory.Where(ba => ba.BookId == id).ToList();
+                foreach (var category in book.BookCategory)
+                {
+                    category.Category = context.Categories.FirstOrDefault(a => a.Id == category.CategoryId);
+                }
+                return View(book);
             }
-            book.BookCategory = context.BookCategory.Where(ba => ba.BookId == id).ToList();
-            foreach (var category in book.BookCategory)
-            {
-                category.Category = context.Categories.FirstOrDefault(a => a.Id == category.CategoryId);
-            }
-            return View(book);
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
 
-           
         }
         public ActionResult DetailsUser(int id)
         {
-            var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
-            if (book == null) return NotFound();
-            book.BookAuthor = context.BookAuthor.Where(ba => ba.BookId == id).ToList();
-            foreach (var author in book.BookAuthor)
+            try
             {
-                author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
+                if (book == null) return NotFound();
+                book.BookAuthor = context.BookAuthor.Where(ba => ba.BookId == id).ToList();
+                foreach (var author in book.BookAuthor)
+                {
+                    author.Author = context.Authors.FirstOrDefault(a => a.Id == author.AuthorId);
+                }
+                book.BookCategory = context.BookCategory.Where(ba => ba.BookId == id).ToList();
+                foreach (var category in book.BookCategory)
+                {
+                    category.Category = context.Categories.FirstOrDefault(a => a.Id == category.CategoryId);
+                }
+                return View(book);
             }
-            book.BookCategory = context.BookCategory.Where(ba => ba.BookId == id).ToList();
-            foreach (var category in book.BookCategory)
-            {
-                category.Category = context.Categories.FirstOrDefault(a => a.Id == category.CategoryId);
-            }
-            return View(book);
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
 
 
         }
@@ -221,11 +254,8 @@ namespace LibraryIS.Controllers
                 
                 return RedirectToAction(nameof(AddCategories), new RouteValueDictionary(new { bookid = book.Id }));
             }
-            catch (Exception ex)
-            {
-
-            }
-            return View();
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+           
            
         }
        
@@ -233,14 +263,19 @@ namespace LibraryIS.Controllers
 
         public ActionResult AddCategories(int bookid)
         {
+            try
+            {
 
-            var book = context.Books.Where(b => b.Id == bookid).FirstOrDefault();
-            
-            var categories = context.Categories.ToList();
-            ViewBag.BookId = bookid;
-            ViewBag.Book = book;
-            ViewBag.Categories = categories;    
-            return View();
+
+                var book = context.Books.Where(b => b.Id == bookid).FirstOrDefault();
+
+                var categories = context.Categories.ToList();
+                ViewBag.BookId = bookid;
+                ViewBag.Book = book;
+                ViewBag.Categories = categories;
+                return View();
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -257,20 +292,21 @@ namespace LibraryIS.Controllers
 
                 return RedirectToAction(nameof(AddAuthors), new RouteValueDictionary(new { bookid = bookCategory.BookId }));
             }
-            catch(Exception ex)
-            {
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
 
-            }
-            return View();
         }
         public ActionResult AddAuthors(int bookid)
         {
-            var book = context.Books.Where(b=> b.Id == bookid).FirstOrDefault();
-            ViewBag.BookId = bookid;
-            ViewBag.Book = book;
-            var authors = context.Authors.ToList();
-            ViewBag.Authors = authors;
-            return View();
+            try
+            {
+                var book = context.Books.Where(b => b.Id == bookid).FirstOrDefault();
+                ViewBag.BookId = bookid;
+                ViewBag.Book = book;
+                var authors = context.Authors.ToList();
+                ViewBag.Authors = authors;
+                return View();
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -283,14 +319,11 @@ namespace LibraryIS.Controllers
                 bookAuthor.Book.Visible = true;
                 context.BookAuthor.Add(bookAuthor);
                 context.SaveChanges();
-
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
 
-            }
-           
-            return RedirectToAction(nameof(Index));
+            
         }
         public ActionResult AddUser(int bookid)
         {
@@ -300,14 +333,10 @@ namespace LibraryIS.Controllers
                 ViewBag.BookId = book.Id;
                 ViewBag.Book = book;
                 var users = context.Users.ToList();
-                ViewBag.Users = users; 
+                ViewBag.Users = users;
+                return View();
             }
-            catch(Exception ex)
-            {
-
-            }
-
-            return View();
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
 
 
@@ -331,13 +360,10 @@ namespace LibraryIS.Controllers
                 context.BookUser.Add(bookUser);
                 context.SaveChanges();
             }
-            catch(Exception ex)
-            {
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
 
-            }
-           
-           // return RedirectToAction(nameof(UserController.Details), new RouteValueDictionary(bookUser.BookId));
-           
+            // return RedirectToAction(nameof(UserController.Details), new RouteValueDictionary(bookUser.BookId));
+
 
             return RedirectToAction(nameof(UserController.Details), new RouteValueDictionary(new { id = bookUser.BookId }));// он возвращает book 
 
@@ -348,24 +374,28 @@ namespace LibraryIS.Controllers
         // GET: BookController/Edit/5
         public ActionResult Edit(int id)
 		{
-			var book = context.Books.Where(b=> b.Id == id).FirstOrDefault();
-			if (book == null)
-				return BadRequest();
-            AddBookViewModel bookwm = new AddBookViewModel();
-            bookwm.Id = id;
-            bookwm.Name = book.Name;
-            bookwm.Publication = book.Publication;
-            bookwm.Description = book.Description;
-            bookwm.PublicationCity = book.PublicationCity;
-            bookwm.PublicationDate = book.PublicationDate;
-            bookwm.Language = book.Language;
-            bookwm.Binding = book.Binding;
-            bookwm.CountOfPages = book.CountOfPages;
-            bookwm.State =  book.State;
-            ViewBag.Book = book;
-            ViewBag.Id = book.Id;
-			return View(bookwm);
-		}
+            try
+            {
+                var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
+                if (book == null)
+                    return BadRequest();
+                AddBookViewModel bookwm = new AddBookViewModel();
+                bookwm.Id = id;
+                bookwm.Name = book.Name;
+                bookwm.Publication = book.Publication;
+                bookwm.Description = book.Description;
+                bookwm.PublicationCity = book.PublicationCity;
+                bookwm.PublicationDate = book.PublicationDate;
+                bookwm.Language = book.Language;
+                bookwm.Binding = book.Binding;
+                bookwm.CountOfPages = book.CountOfPages;
+                bookwm.State = book.State;
+                ViewBag.Book = book;
+                ViewBag.Id = book.Id;
+                return View(bookwm);
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+        }
 
 		// POST: BookController/Edit/5
 		[HttpPost]
@@ -407,30 +437,40 @@ namespace LibraryIS.Controllers
                 context.SaveChanges();
                 return RedirectToAction(nameof(DetailsCollection), new RouteValueDictionary(new { name = bookwm.Name }));
             }
-			catch
-			{
-				return View();
-			}
-		}
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+        }
 
 
 
 
         public ActionResult DeleteForBasket(int id)
         {
-            var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
-            book.Visible = false;
-            context.Update(book);
-            context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+
+
+                var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
+                book.Visible = false;
+                context.Update(book);
+                context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public ActionResult Restore(int id)
         {
-            var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
-            book.Visible = true;
-            context.Update(book);
-            context.SaveChanges();
-            return RedirectToAction(nameof(DetailsCollection), new RouteValueDictionary(new {name = book.Name}));
+            try
+            {
+
+
+                var book = context.Books.Where(b => b.Id == id).FirstOrDefault();
+                book.Visible = true;
+                context.Update(book);
+                context.SaveChanges();
+                return RedirectToAction(nameof(DetailsCollection), new RouteValueDictionary(new { name = book.Name }));
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+
         }
 
 
@@ -446,11 +486,8 @@ namespace LibraryIS.Controllers
 				context.SaveChanges();
 				return RedirectToAction(nameof(Index));
 			}
-			catch
-			{
-				return View();
-			}
-		}
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+        }
 
         public ActionResult Overdue()
         {
@@ -491,11 +528,8 @@ namespace LibraryIS.Controllers
                
                 return View(books);
             }
-            catch
-            {
-                return View();
-            }
-          
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+
         }
 
      
@@ -507,17 +541,15 @@ namespace LibraryIS.Controllers
                
                 var bookusers = context.BookUser.Where(bu => bu.BookId == book.Id).ToList();
                 book.IsFramed = false;
+              
                 context.Books.Update(book);
                 context.RemoveRange(bookusers);
                 context.SaveChanges();
                 return RedirectToAction("Overdue");   
             }
-            catch
-            {
-                return View();
-            }
-            
-            
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+
+
         }
 
 

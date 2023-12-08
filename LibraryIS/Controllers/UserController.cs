@@ -18,67 +18,109 @@ namespace LibraryIS.Controllers
         // GET: UserController
         public ActionResult Index()
         {
-            var users = context.Users.Where(u => u.Visible == true).ToList();
-            if (users.Count <= 0)
-                return BadRequest();
-            foreach (var user in users)
+            try
             {
-                user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
-            }
 
-            return View(users);
+
+                var users = context.Users.Where(u => u.Visible == true).ToList();
+                if (users.Count <= 0)
+                    return BadRequest();
+                foreach (var user in users)
+                {
+                    user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
+                }
+
+                return View(users);
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
 
         // GET: UserController/Details/5
         public ActionResult Details(int id)
         {
-            var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
-
-            if (user == null)
-                return BadRequest();
-            user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
-            user.BookUsers = context.BookUser.Where(bu => bu.UserId == id).ToList();
-            foreach (var item in user.BookUsers)
+            try
             {
-                item.Book = context.Books.FirstOrDefault(b => b.Id == item.BookId);
-            }
 
-            return View(user);
+
+                var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
+
+                if (user == null)
+                    return BadRequest();
+                user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
+                user.BookUsers = context.BookUser.Where(bu => bu.UserId == id).ToList();
+                foreach (var item in user.BookUsers)
+                {
+                    item.Book = context.Books.FirstOrDefault(b => b.Id == item.BookId);
+                }
+
+                return View(user);
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
+        }
+        public ActionResult Error(string message)
+        {
+            try
+            {
+
+
+                ErrorViewModel error = new ErrorViewModel();
+                error.message = message;
+                return View(error);
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public ActionResult DetailsUser(int id)
         {
-            var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
-
-            if (user == null)
-                return BadRequest();
-            user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
-            user.BookUsers = context.BookUser.Where(bu => bu.UserId == id).ToList();
-            foreach (var item in user.BookUsers)
+            try
             {
-                item.Book = context.Books.FirstOrDefault(b => b.Id == item.BookId);
-            }
 
-            return View(user);
+
+                var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
+
+                if (user == null)
+                    return BadRequest();
+                user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
+                user.BookUsers = context.BookUser.Where(bu => bu.UserId == id).ToList();
+                foreach (var item in user.BookUsers)
+                {
+                    item.Book = context.Books.FirstOrDefault(b => b.Id == item.BookId);
+                }
+
+                return View(user);
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public ActionResult UserBasket()
         {
-            var users = context.Users.Where(u => u.Visible == false).ToList();
-            if (users.Count <= 0)
-                return BadRequest();
-            foreach (var user in users)
+            try
             {
-                user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
+
+
+                var users = context.Users.Where(u => u.Visible == false).ToList();
+                if (users.Count <= 0)
+                    return BadRequest();
+                foreach (var user in users)
+                {
+                    user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
+                }
+                return View(users);
             }
-            return View(users);
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
 
 
         // GET: UserController/Create
         public ActionResult Create()
         {
-            var roles = context.Roles.ToList();
-            ViewBag.Roles = roles;
-            return View();
+            try
+            {
+
+
+                var roles = context.Roles.ToList();
+                ViewBag.Roles = roles;
+                return View();
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
 
         // POST: UserController/Create
@@ -96,21 +138,24 @@ namespace LibraryIS.Controllers
                 context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
 
         // GET: UserController/Edit/5
         public ActionResult Edit(int id)
         {
-            var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
-            if (user == null)
-                return BadRequest();
-            ViewBag.UserId = user.Id;
+            try
+            {
 
-            return View(user);
+
+                var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
+                if (user == null)
+                    return BadRequest();
+                ViewBag.UserId = user.Id;
+
+                return View(user);
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
 
         // POST: UserController/Edit/5
@@ -140,19 +185,20 @@ namespace LibraryIS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public ActionResult EditRole(int userId)
         {
-            var roles = context.Roles.ToList();
-            var user = context.Users.Where(u => u.Id == userId).FirstOrDefault();
-            ViewBag.Roles = roles;
-            ViewBag.Name = user.FirstName + " " + user.LastName + " " + user.MiddleName;
-            ViewBag.UserId = userId;
-            return View();
+            try
+            {
+                var roles = context.Roles.ToList();
+                var user = context.Users.Where(u => u.Id == userId).FirstOrDefault();
+                ViewBag.Roles = roles;
+                ViewBag.Name = user.FirstName + " " + user.LastName + " " + user.MiddleName;
+                ViewBag.UserId = userId;
+                return View();
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
 
 
@@ -160,52 +206,73 @@ namespace LibraryIS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditRole(User user)
         {
+            try
+            {
+                var data = context.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+                var role = context.Roles.FirstOrDefault(role => role.Id == user.RoleId);
+                if (role != null)
+                {
+                    data.Role = role;
+                    data.RoleId = user.RoleId;
+                }
 
-            var data = context.Users.Where(u => u.Id == user.Id).FirstOrDefault();
-            var role = context.Roles.FirstOrDefault(role => role.Id == user.RoleId);
-            data.Role = role;
-            data.RoleId = user.RoleId;
-            context.Users.Update(data);
-            context.SaveChanges();
-            return RedirectToAction(nameof(Details), new RouteValueDictionary(new { id = user.Id }));
+                context.Users.Update(data);
+                context.SaveChanges();
+                return RedirectToAction(nameof(Details), new RouteValueDictionary(new { id = user.Id }));
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public ActionResult ChangePassword(int userId)
         {
-            var user = context.Users.Where(u => u.Id == userId).FirstOrDefault();
-            ViewBag.UserId = userId;
-            ViewBag.Email = user.Email;
-            return View();
+            try
+            {
+                var user = context.Users.Where(u => u.Id == userId).FirstOrDefault();
+                ViewBag.UserId = userId;
+                ViewBag.Email = user.Email;
+                return View();
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(User user)
         {
-
-            var data = context.Users.Where(u => u.Id == user.Id).FirstOrDefault();
-            data.Password = user.Password;
-            data.Email = user.Email;
-            context.Users.Update(data);
-            context.SaveChanges();
-            return RedirectToAction(nameof(DetailsSimpleUser), new RouteValueDictionary(new { id = user.Id }));
+            try
+            {
+                var data = context.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+                data.Password = user.Password;
+                data.Email = user.Email;
+                context.Users.Update(data);
+                context.SaveChanges();
+                return RedirectToAction(nameof(DetailsSimpleUser), new RouteValueDictionary(new { id = user.Id }));
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public ActionResult DeleteBasket(int id)
         {
-            var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
-            data.Visible = false;
-            context.Users.Update(data);
-            context.SaveChanges();
-            return RedirectToAction(nameof(UserBasket));
+            try
+            {
+                var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
+                data.Visible = false;
+                context.Users.Update(data);
+                context.SaveChanges();
+                return RedirectToAction(nameof(UserBasket));
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
 
         }
         public ActionResult Restore(int id)
         {
-
-            var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
-            data.Visible = true;
-            context.Users.Update(data);
-            context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var data = context.Users.Where(u => u.Id == id).FirstOrDefault();
+                data.Visible = true;
+                context.Users.Update(data);
+                context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
 
 
@@ -218,10 +285,7 @@ namespace LibraryIS.Controllers
                 context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public ActionResult LogIn()
         {
@@ -247,28 +311,28 @@ namespace LibraryIS.Controllers
                     return RedirectToAction(nameof(DetailsSimpleUser), new RouteValueDictionary(new { id = us.Id }));
                 }
             }
-            catch
-            {
-
-            }
-            return View();
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
        
      
         public ActionResult DetailsSimpleUser(int id)
         {
-            var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
-
-            if (user == null)
-                return BadRequest();
-            user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
-            user.BookUsers = context.BookUser.Where(bu => bu.UserId == id).ToList();
-            foreach (var item in user.BookUsers)
+            try
             {
-                item.Book = context.Books.FirstOrDefault(b => b.Id == item.BookId);
-            }
+                var user = context.Users.Where(u => u.Id == id).FirstOrDefault();
 
-            return View(user);
+                if (user == null)
+                    return BadRequest();
+                user.Role = context.Roles.FirstOrDefault(r => r.Id == user.RoleId);
+                user.BookUsers = context.BookUser.Where(bu => bu.UserId == id).ToList();
+                foreach (var item in user.BookUsers)
+                {
+                    item.Book = context.Books.FirstOrDefault(b => b.Id == item.BookId);
+                }
+
+                return View(user);
+            }
+            catch (Exception ex) { return RedirectToAction(nameof(Error), new RouteValueDictionary(new { message = ex.Message })); }
         }
         public ActionResult AdminPanel()
         {
